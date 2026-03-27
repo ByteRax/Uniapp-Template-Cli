@@ -1,47 +1,51 @@
-# src/http — HTTP 请求封装
+<!-- Parent: ../AGENTS.md -->
+<!-- Generated: 2026-03-28 | Updated: 2026-03-28 -->
 
-基于类的 Request 封装，统一拦截 + 自动取消重复请求。
+# http
 
-## STRUCTURE
+## Purpose
+封装统一请求入口、请求配置和请求/响应拦截器，向业务层提供一致的 `uni.request` 使用方式，并集中处理 token、loading、重复请求取消与错误提示。
 
-```
-http/
-├── index.ts          # Request 类 + httpInstance 单例 + setupHttp(app)
-├── interceptor.ts    # 请求/响应拦截器
-├── types.ts          # RequestConfig, RequestOptions, ResponseData<T>, RequestMeta
-└── tools/
-    └── queryString.ts  # URL 参数序列化
-```
+## Key Files
 
-## HOW IT WORKS
+| File | Description |
+|------|-------------|
+| `index.ts` | `Request` 类、`httpInstance` 单例和 `setupHttp(app)` 挂载逻辑。 |
+| `interceptor.ts` | 请求/响应拦截器，实现 token 注入、loading 管理、401 处理等。 |
+| `types.ts` | 请求配置、响应结构与元数据类型定义。 |
+| `tools/queryString.ts` | URL 参数序列化辅助工具。 |
 
-```
-请求发起 → interceptor.request
-         → 重复请求检测 (method+url+data hash)
-         → 取消前一个相同请求
-         → 注入 Authorization: Bearer {token}
-         → meta.loading ? addLoading() : skip
-         → uni.request(...)
-         → interceptor.response
-         → removeLoading
-         → 解析 response → ResponseData<T>
-```
+## Subdirectories
 
-## KEY PATTERNS
+| Directory | Purpose |
+|-----------|---------|
+| `tools/` | 请求层内部工具函数。 |
 
-- **重复请求取消**: 基于 `${method}_${url}_${stringify(data)}` 生成 key，自动 cancel 前一个
-- **Loading 队列**: 多个并发请求共享一个 loading，计数归零才关闭
-- **H5 代理**: `#ifdef H5` 时检查 `VITE_APP_PROXY_ENABLE`，拼接 `VITE_APP_PROXY_PREFIX`
-- **Token 注入**: 从 `useToken().validToken` 读取，过期不自动刷新
+## For AI Agents
 
-## CONVENTIONS
+### Working In This Directory
+- 优先维持“统一入口 + 拦截器处理”的架构，不要把页面级请求分支散落到业务层。
+- 变更前确认 `meta.loading`、`meta.toast`、`meta.originalData` 等元数据约定没有被破坏。
+- H5 代理、登录态和重复请求取消都在这里集中实现，改动时注意多端行为一致性。
 
-- 页面代码通过 `Apis.http.get/post` 发请求（不直接 import httpInstance）
-- `meta.loading: true` 自动显示全局 Loading
-- `meta.toast: true` 允许响应拦截器弹 toast
-- `meta.originalData: true` 返回原始数据
+### Testing Requirements
+- 至少运行 `pnpm type-check`、`pnpm lint`、`pnpm format:check`。
+- 若修改请求行为，重点验证 token 注入、loading 显示、401 跳转和重复请求取消逻辑。
+- 涉及 H5 代理时，再验证代理前缀拼接结果。
 
-## ANTI-PATTERNS
+### Common Patterns
+- `Request.request()` 里合并全局 config 与单次请求 options。
+- 拦截器在请求前后统一处理状态，不让页面重复写样板逻辑。
+- `setupHttp(app)` 将实例挂到全局属性，供应用层统一消费。
 
-- **不要在拦截器里做异步 token 刷新**（当前架构不支持 refresh token 流程）
-- **不要手动管理 loading**（拦截器自动处理）
+## Dependencies
+
+### Internal
+- 依赖 `src/stores/useToken.ts`、UI 状态能力与路由跳转逻辑。
+- 被 `src/api/` 或统一请求入口封装调用。
+
+### External
+- `@dcloudio/uni-app` 的 `uni.request`。
+- `vue` 应用实例类型。 |
+
+<!-- MANUAL: Any manually added notes below this line are preserved on regeneration -->

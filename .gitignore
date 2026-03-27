@@ -32,3 +32,4 @@ src/types/async-component.d.ts
 
 # Local env overrides
 env/.env.*.local
+/.omc/

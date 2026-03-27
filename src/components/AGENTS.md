@@ -1,56 +1,56 @@
-# src/components — 全局组件
+<!-- Parent: ../AGENTS.md -->
+<!-- Generated: 2026-03-28 | Updated: 2026-03-28 -->
 
-自动注册，无需 import。通过 `@uni-helper/vite-plugin-uni-components` 扫描。
+# components
 
-## STRUCTURE
+## Purpose
+存放自动注册的 Vue 组件，按通用组件、业务组件和布局组件划分。这里的组件既包含全局 UI 容器，也包含页面级布局封装与少量演示组件。
 
-```
-components/
-├── common/                    # 通用基础组件
-│   ├── GlobalLoading.vue      # 全局加载 — 由 useGlobalLoading store 驱动
-│   ├── GlobalToast.vue        # 全局 Toast — 由 useGlobalToast store 驱动
-│   └── GlobalMessage.vue      # 全局消息框 — 由 useGlobalMessage store 驱动
-├── business/                  # 业务组件
-│   └── PrivacyPopup.vue       # 隐私协议弹窗 — 仅微信小程序 (#ifdef MP-WEIXIN)
-├── layout/                    # 布局组件
-│   └── BaseLayout.vue         # 页面包装器 — 提供 loading/empty/error 状态管理
-└── DemoBlock.vue              # 演示块 — 开发/文档用
-```
+## Key Files
 
-## KEY PATTERNS
+| File | Description |
+|------|-------------|
+| `DemoBlock.vue` | 演示或文档用途的块级示例组件。 |
+| `common/GlobalLoading.vue` | 全局 loading 组件，由全局状态驱动显示。 |
+| `common/GlobalToast.vue` | 全局 toast 组件，封装多端提示展示。 |
+| `common/GlobalMessage.vue` | 全局消息框组件，承载 alert / confirm / prompt 类交互。 |
+| `business/PrivacyPopup.vue` | 微信小程序隐私协议相关弹窗。 |
+| `layout/BaseLayout.vue` | 页面基础布局容器，统一处理 loading / empty / error / success 状态。 |
 
-### BaseLayout 使用
+## Subdirectories
 
-```vue
-<template>
-  <base-layout ref="page">
-    <view>页面内容</view>
-  </base-layout>
-</template>
-```
+| Directory | Purpose |
+|-----------|---------|
+| `common/` | 跨页面复用的全局基础组件。 |
+| `business/` | 贴近业务语义的组件。 |
+| `layout/` | 页面布局和容器类组件。 |
 
-暴露方法: `showLoading()` / `showEmpty()` / `showError(msg, callback)` / `showSuccess()`
+## For AI Agents
 
-### GlobalToast 平台适配
+### Working In This Directory
+- 组件由扫描插件自动注册，通常不需要手动 import 或全局注册。
+- `common/` 下保持无业务耦合；业务特定能力优先放 `business/`。
+- 改动全局 UI 组件时，要同步理解 `App.ku.vue` 与对应 store/composable 的联动。
+- 注意多端条件编译，特别是微信和支付宝小程序的差异处理。
 
-```vue
-<!-- #ifndef MP-ALIPAY -->
-<wd-toast selector="globalToast" />
-<!-- #endif -->
-<!-- #ifdef MP-ALIPAY -->
-<wd-toast v-if="hackAlipayVisible" selector="globalToast" />
-<!-- #endif -->
-```
+### Testing Requirements
+- 通用验证：`pnpm type-check`、`pnpm lint`、`pnpm format:check`。
+- 改动组件后至少在一个目标端运行页面验证渲染与交互。
+- 若修改全局提示类组件，重点检查跨页面显示、关闭逻辑和平台兼容。
 
-支付宝小程序需要 `hackAlipayVisible` 延迟渲染 hack。
+### Common Patterns
+- 组件采用 PascalCase 文件名和组件名。
+- 常用全局 UI 由 store 状态驱动，而不是局部直接控制 DOM。
+- 布局组件会暴露状态切换方法给页面层使用。
+- easycom / 组件扫描负责自动解析 `wd-*` 与本地组件。
 
-## CONVENTIONS
+## Dependencies
 
-- 所有组件设置 `options: { virtualHost: true, addGlobalClass: true, styleIsolation: 'shared' }`
-- 组件命名 PascalCase，文件名与组件名一致
-- UI 库: `wd-*` (wot-design-uni) + `z-paging`，通过 easycom 自动解析
+### Internal
+- 与 `src/composables/`、`src/stores/`、`App.ku.vue` 和页面目录存在联动。
 
-## ANTI-PATTERNS
+### External
+- `vue` 组件系统。
+- `wot-design-uni`、`z-paging` 等 UI 组件库。
 
-- **不要在 common/ 组件里引入业务逻辑**
-- **不要手动注册组件**（自动导入已覆盖 src/components + src/layout）
+<!-- MANUAL: Any manually added notes below this line are preserved on regeneration -->

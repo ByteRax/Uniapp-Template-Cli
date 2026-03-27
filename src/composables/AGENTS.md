@@ -1,44 +1,53 @@
-# src/composables — 组合式函数（含 Pinia Store）
+<!-- Parent: ../AGENTS.md -->
+<!-- Generated: 2026-03-28 | Updated: 2026-03-28 -->
 
-⚠️ 本项目的 composables 大部分是 `defineStore`，不是纯 Composable。这是有意为之的约定。
+# composables
 
-## STRUCTURE
+## Purpose
+存放组合式能力与全局状态封装。该目录既有纯 composable，也有以 `useGlobal*` 命名但实际基于 Pinia 的全局状态模块，是项目的重要约定之一。
 
-```
-composables/
-├── useGlobalLoading.ts   # Pinia Store — 全局 Loading 状态
-├── useGlobalToast.ts     # Pinia Store — 全局 Toast 提示
-├── useGlobalMessage.ts   # Pinia Store — 全局消息弹窗 (alert/confirm/prompt)
-├── useGlobalPage.ts      # Pinia Store — 页面级 ref 管理 (BaseLayout + z-paging)
-├── useScroll.ts          # 纯 Composable — 列表滚动加载 (分页/loading/finished/error)
-├── useTheme.ts           # 纯 Composable — 主题管理 (读取 themeStore + 监听系统变化)
-└── types/
-    └── theme.ts          # 主题类型定义
-```
+## Key Files
 
-## KEY PATTERNS
+| File | Description |
+|------|-------------|
+| `useGlobalLoading.ts` | 全局 loading 状态封装。 |
+| `useGlobalToast.ts` | 全局 toast 状态封装。 |
+| `useGlobalMessage.ts` | 全局消息框状态封装。 |
+| `useGlobalPage.ts` | 页面级 ref 与状态协作封装。 |
+| `useScroll.ts` | 列表滚动/分页相关纯 composable。 |
+| `useTheme.ts` | 主题读取与系统主题同步逻辑。 |
+| `types/theme.ts` | 主题相关类型定义。 |
 
-### 全局 UI 组件通过 Store 驱动
+## Subdirectories
 
-```
-useGlobalLoading().loading('加载中...')  →  GlobalLoading.vue 响应状态
-useGlobalToast().success('成功')        →  GlobalToast.vue 响应状态
-useGlobalMessage().confirm({...})       →  GlobalMessage.vue 响应状态
-```
+| Directory | Purpose |
+|-----------|---------|
+| `types/` | composable 使用的局部类型定义。 |
 
-这些 Store 状态在 `App.ku.vue` 中被渲染，实现跨页面 UI。
+## For AI Agents
 
-### 页面匹配机制
+### Working In This Directory
+- 不要仅凭目录名判断职责；部分文件本质上是单例状态模块，不是普通函数式 composable。
+- 新增全局 UI 能力时，通常要同时改这里、对应组件以及 `App.ku.vue`。
+- 避免在这里直接操作平台不兼容的 DOM 或浏览器专属 API，除非已做好 H5 限定。
 
-全局 UI 组件通过 `currentPage` / `currentPath` 比较，确保只在发起页面上显示。
+### Testing Requirements
+- 改动后运行 `pnpm type-check`、`pnpm lint`、`pnpm format:check`。
+- 若影响全局 UI 状态，手动验证页面切换、状态清理和组件显示是否符合预期。
+- 若影响主题或滚动逻辑，补充目标端页面交互验证。
 
-## CONVENTIONS
+### Common Patterns
+- `useGlobal*` 往往代表全局共享状态。
+- 纯 composable 倾向于无副作用、返回状态与方法的函数式风格。
+- 与 `App.ku.vue` 配合渲染跨页面 loading / toast / message。
 
-- **命名**: `useGlobal*.ts` = Pinia Store，其余为纯 Composable
-- **新增全局 UI**: 创建 Store → 创建组件 → 在 `App.ku.vue` 注册
-- **新增业务 Hook**: 参考 `useScroll.ts` 的纯函数模式
+## Dependencies
 
-## ANTI-PATTERNS
+### Internal
+- 依赖 `src/stores/`、`src/components/`、`App.ku.vue` 与页面层调用。
 
-- **不要把 `useGlobal*` 当普通 composable 理解**（它们是单例 Store）
-- **不要在 composable 里直接操作 DOM**（UniApp 多端不支持）
+### External
+- `vue` 组合式 API。
+- `pinia`（针对全局状态型 composable）。
+
+<!-- MANUAL: Any manually added notes below this line are preserved on regeneration -->

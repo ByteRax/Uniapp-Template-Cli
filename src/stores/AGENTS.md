@@ -1,42 +1,49 @@
-# src/stores — Pinia 状态管理
+<!-- Parent: ../AGENTS.md -->
+<!-- Generated: 2026-03-28 | Updated: 2026-03-28 -->
 
-Setup Store 写法 + 持久化。所有 store 自动导入，全局可用。
+# stores
 
-## STRUCTURE
+## Purpose
+存放 Pinia store 与 store 初始化逻辑，负责认证状态、用户信息、主题状态以及 Pinia 持久化配置。
 
-```
-stores/
-├── index.ts       # Pinia 实例 + setupStore(app) + 持久化配置
-├── useToken.ts    # 认证核心: token / login / wxLogin / logout / hasLogin
-├── user.ts        # 用户信息: userInfo / fetchUserInfo / clearUserInfo
-└── theme.ts       # 主题管理: theme (light/dark) / themeVars / setTheme
-```
+## Key Files
 
-## KEY DETAILS
+| File | Description |
+|------|-------------|
+| `index.ts` | 创建 Pinia、配置持久化插件并提前 `setActivePinia(store)`。 |
+| `useToken.ts` | 登录态核心 store，管理 token、过期时间和登录/登出流程。 |
+| `user.ts` | 用户信息 store。 |
+| `theme.ts` | 主题状态与主题变量 store。 |
 
-### useToken (认证核心)
-- **状态**: `tokenInfo { token, expiresIn }`
-- **过期检测**: `hasLogin()` = token 存在 + 未过期（基于 `accessTokenExpireTime` storage）
-- **登录**: `login(form)` → API → `setTokenInfo` → `fetchUserInfo`
-- **微信登录**: `wxLogin()` → `getWxCode()` → API → 同上
-- **登出**: 清除 token + storage + userInfo
-- **持久化**: `persist: true`
+## Subdirectories
 
-### user
-- **状态**: `userInfo { avatar, nickname, userId, username }`
-- **持久化**: `persist: true`
+该目录当前没有需要单独文档化的子目录。
 
-### theme
-- **状态**: `theme` (light/dark)，`themeVars` (暗色模式 CSS 变量)
-- **系统跟随**: `uni.onThemeChange` 自动同步
+## For AI Agents
 
-## CONVENTIONS
+### Working In This Directory
+- 维持 setup store 写法与当前持久化方案，不要引入额外状态层。
+- `setActivePinia(store)` 的提前激活是现有兼容性修复，不要随意移除。
+- 登录态、用户信息和主题都可能被自动导入广泛使用，重命名或拆分前先评估引用面。
 
-- **Setup Store 写法**: 用函数式 `defineStore('name', () => { ... })` 而非选项式
-- **持久化**: 添加 `{ persist: true }` — 底层用 `uni.getStorageSync/setStorageSync`
-- **初始化顺序**: `setActivePinia(store)` 在 `app.use(store)` 之前调用（解决 APP 端白屏）
+### Testing Requirements
+- 至少运行 `pnpm type-check`、`pnpm lint`、`pnpm format:check`。
+- 改登录态或主题后，手动验证 token 持久化、退出登录、用户信息拉取和主题切换。
+- 若改持久化配置，再检查 `uni.getStorageSync` / `uni.setStorageSync` 路径是否仍正常。
 
-## ANTI-PATTERNS
+### Common Patterns
+- Pinia 持久化插件直接映射 UniApp storage API。
+- 登录成功后通常联动拉取用户信息。
+- 主题 store 和主题 composable 共同驱动系统主题同步。
 
-- **不要在 computed 里调用异步函数**（见 useToken.getValidToken 注释）
-- **不要在 store 外直接操作 storage**（统一走 Pinia 持久化）
+## Dependencies
+
+### Internal
+- 被 `src/main.ts` 初始化调用，并与 `src/http/`、`src/router/`、`src/composables/` 深度协作。
+
+### External
+- `pinia`。
+- `pinia-plugin-persistedstate`。
+- `@dcloudio/uni-app` storage API。
+
+<!-- MANUAL: Any manually added notes below this line are preserved on regeneration -->

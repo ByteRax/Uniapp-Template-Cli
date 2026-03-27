@@ -42,3 +42,18 @@
 - `src/stores/useToken.ts` - 清理日志
 - `src/stores/theme.ts` - 添加持久化
 - `src/router/router.ts` - 清理测试方法
+
+## Phase 4: Deepinit 文档体系建设
+16. 将根目录 `AGENTS.md` 从旧版知识库风格统一重写为标准 deepinit 模板
+17. 新建一级目录 `AGENTS.md`：`src/`、`env/`、`public/`、`scripts/`、`.agent/`、`.github/`、`.husky/`
+18. 更新 `vite-plugins/AGENTS.md` 为统一模板，补充目录职责、测试要求和依赖说明
+19. 新建 `src/AGENTS.md`，作为源码目录总入口，说明启动链路、生成文件约束与子目录职责
+20. 更新 `src/components/`、`src/composables/`、`src/http/`、`src/pages/`、`src/pages-sub/`、`src/router/`、`src/stores/`、`src/utils/` 下的 `AGENTS.md`
+21. 完成层级引用校验：根 `AGENTS.md` 无 Parent，一级目录与 `src` 下子目录文档均使用正确的 `../AGENTS.md` 父级引用
+
+## 本次 Deepinit 关键结论
+
+- 仓库已建立可递归导航的 `AGENTS.md` 层级文档体系，覆盖根目录、一级目录以及 `src` 核心子目录。
+- 文档统一包含 Purpose、Key Files、Subdirectories、For AI Agents、Dependencies 和 `<!-- MANUAL -->` 保留区。
+- `src` 目录下的子文档通过 `<!-- Parent: ../AGENTS.md -->` 正确指向 `src/AGENTS.md`；一级目录文档正确指向根 `AGENTS.md`。
+- 本轮仅补全文档，不涉及业务源码逻辑变更，也未执行 `pnpm type-check` / `pnpm lint` / `pnpm format:check`。
