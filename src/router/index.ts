@@ -1,5 +1,5 @@
 import type { PageMetaDatum, SubPackages } from '@uni-helper/vite-plugin-uni-pages'
-import type { App } from '@vue/runtime-core'
+import type { App } from 'vue'
 import { pages, subPackages } from '@/pages.json'
 import { routeInterceptor } from '@/router/interceptor.ts'
 

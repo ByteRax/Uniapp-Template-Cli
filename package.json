@@ -67,10 +67,10 @@
     "build:quickapp-webview-union": "uni build -p quickapp-webview-union",
     "upload:mp": "node ./scripts/upload-weixin.js",
     "type-check": "vue-tsc --noEmit",
-    "format": "prettier --write \"**/*.{js,ts,tsx,vue,json,css,scss,md}\"",
-    "format:check": "prettier --check \"**/*.{js,ts,tsx,vue,json,css,scss,md}\"",
-    "lint": "prettier . --write && eslint .",
-    "lint:fix": "prettier . --write && eslint . --fix",
+    "format": "oxfmt -c .oxfmtrc.json .",
+    "format:check": "oxfmt -c .oxfmtrc.json --check .",
+    "lint": "oxlint -c .oxlintrc.json --disable-nested-config . && eslint \"src/**/*.vue\"",
+    "lint:fix": "oxfmt -c .oxfmtrc.json . && oxlint -c .oxlintrc.json --disable-nested-config --fix . && eslint \"src/**/*.vue\" --fix",
     "prepare": "husky"
   },
   "dependencies": {
@@ -122,13 +122,12 @@
     "code-inspector-plugin": "^1.3.3",
     "dayjs": "^1.11.19",
     "eslint": "^9.39.2",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-prettier": "^5.5.5",
     "husky": "^9.1.7",
     "lint-staged": "^16.4.0",
     "miniprogram-api-typings": "^5.0.0",
     "miniprogram-ci": "^2.1.26",
-    "prettier": "^3.8.1",
+    "oxfmt": "0.42.0",
+    "oxlint": "1.57.0",
     "rollup-plugin-visualizer": "^6.0.5",
     "sass": "1.77.8",
     "sass-loader": "10.4.1",
@@ -144,12 +143,17 @@
     "vue-tsc": "^3.1.8"
   },
   "lint-staged": {
-    "*.{js,ts,tsx,vue}": [
-      "prettier --write",
+    "*.{js,cjs,mjs,ts,tsx}": [
+      "oxfmt -c .oxfmtrc.json",
+      "oxlint -c .oxlintrc.json --disable-nested-config --fix"
+    ],
+    "*.vue": [
+      "oxfmt -c .oxfmtrc.json",
+      "oxlint -c .oxlintrc.json --disable-nested-config --fix",
       "eslint --fix"
     ],
     "*.{json,css,scss,md}": [
-      "prettier --write"
+      "oxfmt -c .oxfmtrc.json"
     ]
   }
 }

@@ -1,6 +1,6 @@
 {
   "recommendations": [
-    "esbenp.prettier-vscode", // Prettier 代码格式化
+    "oxc.oxc-vscode", // Oxc（Oxlint + Oxfmt）编辑器集成
     "Vue.volar", // Vue3 官方语法支持（推荐代替 vetur）
     "MS-CEINTL.vscode-language-pack-zh-hans", // vscode 中文（简体）语言包
     "mhutchie.git-graph", // git 提交记录

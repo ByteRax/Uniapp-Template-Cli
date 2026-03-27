@@ -1,4 +1,4 @@
-import type { App } from '@vue/runtime-core'
+import type { App } from 'vue'
 import type { IRequestOptions, RequestConfig, RequestInterceptor, ResponseData } from '@/http/types.ts'
 import { httpInterceptor, httpRequestConfig } from '@/http/interceptor.ts'
 import { RequestOptions } from '@/http/types.ts'

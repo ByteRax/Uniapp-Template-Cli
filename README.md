@@ -55,8 +55,9 @@
 
 ### 开发工具
 
+- [Oxc](https://oxc.rs/) - 通过 `oxfmt` 负责代码格式化，通过 `oxlint` 负责 JavaScript/TypeScript 代码检查
 - [ESLint](https://eslint.org/) - JavaScript/TypeScript 代码质量检查工具
-- [Prettier](https://prettier.io/) - 代码格式化工具
+- `ESLint` 仍保留用于 Vue 模板和 SFC 结构规则检查
 - [Husky](https://typicode.github.io/husky/) +
   [Lint-staged](https://github.com/okonet/lint-staged) - Git 提交钩子
 - [Commitizen](https://github.com/commitizen/cz-cli) + [Commitlint](https://commitlint.js.org/) -
@@ -121,9 +122,10 @@ uniapp-template-cli/
 │   ├── App.vue               # 根组件
 │   └── main.ts               # 入口文件
 ├── vite-plugins/             # Vite插件
-├── .prettierignore             # Prettier 忽略文件
-├── .prettierrc                 # Prettier 配置
-├── .eslint.config.mjs               # ESLint 配置
+├── .prettierignore             # Oxfmt 忽略文件（兼容 Prettier ignore 格式）
+├── .oxfmtrc.json               # Oxfmt 配置
+├── .oxlintrc.json              # Oxlint 配置
+├── .eslint.config.mjs          # ESLint 配置（Vue 模板 / SFC 结构）
 ├── .gitignore                  # Git 忽略文件
 ├── index.html                # HTML 模板
 ├── manifest.config.ts        # 应用的配置文件

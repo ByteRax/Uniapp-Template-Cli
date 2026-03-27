@@ -1,4 +1,4 @@
-import type { App } from '@vue/runtime-core'
+import type { App } from 'vue'
 import { createPinia, setActivePinia } from 'pinia'
 import { createPersistedState } from 'pinia-plugin-persistedstate'
 

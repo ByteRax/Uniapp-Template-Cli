@@ -52,7 +52,7 @@ export const httpInterceptor: RequestInterceptor = {
     }
     pendingRequests.set(requestKey, options)
     meta.requestKey = requestKey
-    meta.loading && addLoading()
+    if (meta.loading) addLoading()
     const tokenStore = useToken()
     const token = tokenStore.validToken
     if (token) {
@@ -63,7 +63,7 @@ export const httpInterceptor: RequestInterceptor = {
   // 响应拦截器
   response: async <T>(options: RequestOptions, response: ResponseResult) => {
     const meta: RequestMeta = response.config?.meta || {}
-    meta.loading && removeLoading()
+    if (meta.loading) removeLoading()
     pendingRequests.delete(meta.requestKey ?? '')
     if (options.cancelFlag) {
       return new ResponseData<T>(-1, '取消请求')

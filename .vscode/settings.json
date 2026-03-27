@@ -22,41 +22,44 @@
     "README.md": "index.html,favicon.ico,robots.txt,CHANGELOG.md",
     "docker.md": "Dockerfile,docker*.md,nginx*,.dockerignore",
     "pages.config.ts": "manifest.config.ts,openapi-ts-request.config.ts",
-    "eslint.config.mjs": ".commitlintrc.*,.prettier*,.editorconfig,.commitlint.cjs,.eslint*",
+    "eslint.config.mjs": ".commitlintrc.*,.oxfmt*,.oxlint*,.prettierignore,.editorconfig,.commitlint.cjs,.eslint*",
     "*.ts": "$(capture).test.ts, $(capture).test.tsx",
     "*.tsx": "$(capture).test.ts, $(capture).test.tsx",
     "CHANGELOG.md": "CHANGELOG*",
     ".env.dev": ".env.dev,.env.prod,.env.test",
-    "project.config.json": "postcss.config.js,project.tt.json,jest.config.ts,babel.config.js,.stylelintrc.js,.eslintrc.js,tailwind.config.js,.prettierrc,.prettierignore,openapi.config.ts",
+    "project.config.json": "postcss.config.js,project.tt.json,jest.config.ts,babel.config.js,.stylelintrc.js,.eslintrc.js,tailwind.config.js,.oxfmtrc.json,.oxlintrc.json,.prettierignore,openapi.config.ts",
     "package.json": "tsconfig.json,pnpm-lock.yaml,pnpm-workspace.yaml,LICENSE,.gitattributes,.gitignore,.gitpod.yml,CNAME,.npmrc,.browserslistrc",
-    ".eslintrc.cjs": ".eslintignore,.prettierignore,.stylelintignore,.commitlintrc.*,.prettierrc.*,.stylelintrc.*,.eslintrc-auto-import.json,.editorconfig,.commitlint.cjs"
+    ".eslintrc.cjs": ".eslintignore,.prettierignore,.stylelintignore,.commitlintrc.*,.stylelintrc.*,.eslintrc-auto-import.json,.editorconfig,.commitlint.cjs"
   },
   // 自动格式化
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.defaultFormatter": "oxc.oxc-vscode",
   "editor.bracketPairColorization.enabled": true,
   "editor.guides.bracketPairs": "active",
-  "editor.formatOnSave": true,
+  "editor.formatOnSave": false,
+  "editor.formatOnSaveMode": "file",
   "files.eol": "\n", // 新文件默认使用 LF
   "files.insertFinalNewline": true, // 文件末尾自动添加空行（推荐）
   "files.trimTrailingWhitespace": true, // 自动删除行尾空格
   "editor.codeActionsOnSave": {
+    "source.format.oxc": "always",
+    "source.fixAll.oxc": "always",
     "source.fixAll.eslint": "explicit",
     "source.fixAll.stylelint": "explicit"
   },
   "[vue]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "[html]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "[scss]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   // 保存
   "files.autoSave": "afterDelay",
@@ -66,8 +69,11 @@
   // 错误高亮
   "errorLens.enabled": true,
   "errorLens.fontWeight": "bold",
-  // Disable the default formatter, use eslint instead
-  "prettier.enable": true,
+  "oxc.configPath": ".oxlintrc.json",
+  "oxc.disableNestedConfig": true,
+  "oxc.fixKind": "safe_fix",
+  "oxc.fmt.configPath": ".oxfmtrc.json",
+  "oxc.requireConfig": true,
   // Silent the stylistic rules in you IDE, but still auto fix them
   "eslint.rules.customizations": [
     {
@@ -123,7 +129,7 @@
   ],
   // Enable eslint for all supported languages
   "eslint.enable": true,
-  "eslint.format.enable": true,
+  "eslint.format.enable": false,
   "eslint.validate": [
     "javascript",
     "javascriptreact",

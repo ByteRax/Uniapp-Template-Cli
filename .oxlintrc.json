@@ -1,0 +1,41 @@
+{
+  "plugins": ["typescript", "vue"],
+  "categories": {
+    "correctness": "error"
+  },
+  "rules": {
+    "no-undef": "off",
+    "no-unused-vars": "off",
+    "typescript/ban-ts-comment": [
+      "error",
+      {
+        "ts-ignore": "allow-with-description"
+      }
+    ],
+    "typescript/no-non-null-asserted-optional-chain": "error",
+    "typescript/no-non-null-assertion": "error",
+    "typescript/no-var-requires": "error",
+    "vue/define-emits-declaration": ["error", "type-based"],
+    "vue/define-props-declaration": ["error", "type-based"],
+    "vue/valid-define-emits": "error",
+    "vue/valid-define-props": "error"
+  },
+  "env": {
+    "builtin": true
+  },
+  "ignorePatterns": [
+    "node_modules",
+    ".nuxt",
+    "dist",
+    "**/uni_modules/",
+    "**/nativeplugins/",
+    "auto-import.d.ts",
+    "**/uni-pages.d.ts",
+    "**/async-import.d.ts",
+    "**/async-component.d.ts",
+    "src/pages.json",
+    "src/manifest.json",
+    "src/service/**",
+    "index.html"
+  ]
+}
