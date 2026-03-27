@@ -35,17 +35,6 @@
       "needLogin": true,
       "name": "PAGES_INDEX_PAGING"
     },
-    // #ifdef MP-WEIXIN
-    {
-      "path": "pages/index/index",
-      "type": "home",
-      "style": {
-        "navigationBarTitleText": "日历组件测试"
-      },
-      "name": "PAGES_INDEX_INDEX"
-    },
-    // #endif
-    // #ifdef H5
     {
       "path": "pages/index/index",
       "type": "home",
@@ -54,7 +43,6 @@
       },
       "name": "PAGES_INDEX_INDEX"
     },
-    // #endif
     {
       "path": "pages/index/testA",
       "type": "page",
@@ -101,17 +89,6 @@
           },
           "name": "STYLES_INDEX"
         },
-        // #ifdef MP-WEIXIN
-        {
-          "path": "WebView",
-          "type": "page",
-          "style": {
-            "navigationBarTitleText": "..."
-          },
-          "name": "WEBVIEW_WEBVIEW"
-        },
-        // #endif
-        // #ifdef H5
         {
           "path": "webview/webView",
           "type": "page",
@@ -120,7 +97,6 @@
           },
           "name": "WEBVIEW_WEBVIEW"
         }
-        // #endif
       ]
     }
   ]
