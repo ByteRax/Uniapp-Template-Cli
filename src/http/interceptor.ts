@@ -9,6 +9,8 @@ const baseUrl = import.meta.env.VITE_SERVER_BASEURL
 let requestNum = 0
 // 重复请求
 const pendingRequests = new Map<string, RequestOptions>()
+// 401 logout lock: prevent concurrent 401 responses from triggering multiple logouts
+let isLoggingOut = false
 
 function addLoading() {
   requestNum++
@@ -18,7 +20,7 @@ function addLoading() {
 }
 
 function removeLoading() {
-  requestNum--
+  requestNum = Math.max(0, requestNum - 1)
   if (requestNum === 0) {
     Apis.hideLoading()
   }
@@ -73,11 +75,18 @@ export const httpInterceptor: RequestInterceptor = {
     let responseMsg = ''
     let responseCode = -1
 
-    // 401 未授权：清除登录状态并跳转登录页
+    // 401 未授权：清除登录状态并跳转登录页（防并发重复触发）
     if (statusCode === 401) {
-      const tokenStore = useToken()
-      await tokenStore.logout()
-      uni.navigateTo({ url: '/pages-sub/login/login' })
+      if (!isLoggingOut) {
+        isLoggingOut = true
+        try {
+          const tokenStore = useToken()
+          await tokenStore.logout()
+          uni.navigateTo({ url: '/pages-sub/login/login' })
+        } finally {
+          isLoggingOut = false
+        }
+      }
       return new ResponseData<T>(-1, '登录已过期，请重新登录')
     }
 

@@ -85,11 +85,31 @@ const layoutExamples = ref([
 
 // 间距系统
 const spacingExamples = ref([
-  { name: 'p-1', value: '4px', class: 'p-1 bg-red-100 inline-block m-1 rounded' },
-  { name: 'p-2', value: '8px', class: 'p-2 bg-blue-100 inline-block m-1 rounded' },
-  { name: 'p-4', value: '16px', class: 'p-4 bg-green-100 inline-block m-1 rounded' },
-  { name: 'p-6', value: '24px', class: 'p-6 bg-yellow-100 inline-block m-1 rounded' },
-  { name: 'p-8', value: '32px', class: 'p-8 bg-purple-100 inline-block m-1 rounded' }
+  {
+    name: 'p-1',
+    value: '4px',
+    class: 'p-1 bg-red-100 inline-block m-1 rounded'
+  },
+  {
+    name: 'p-2',
+    value: '8px',
+    class: 'p-2 bg-blue-100 inline-block m-1 rounded'
+  },
+  {
+    name: 'p-4',
+    value: '16px',
+    class: 'p-4 bg-green-100 inline-block m-1 rounded'
+  },
+  {
+    name: 'p-6',
+    value: '24px',
+    class: 'p-6 bg-yellow-100 inline-block m-1 rounded'
+  },
+  {
+    name: 'p-8',
+    value: '32px',
+    class: 'p-8 bg-purple-100 inline-block m-1 rounded'
+  }
 ])
 
 // 字体系统

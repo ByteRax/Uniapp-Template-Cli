@@ -34,21 +34,13 @@
     ], // 指定需要包含的类型声明文件包
     "allowImportingTsExtensions": true, // 允许导入带 .ts 或 .tsx 扩展名的文件
     "strict": true, // 启用所有严格类型检查选项
-    "strictBindCallApply": true, // 对 bind, call, apply 方法进行更严格的类型检查
-    "strictFunctionTypes": true, // 严格的函数类型检查
-    "strictNullChecks": true, // 严格的 null 检查，null 和 undefined 不能赋值给非空类型
-    "strictPropertyInitialization": true, // 强制在构造函数中初始化类属性
     "noFallthroughCasesInSwitch": true, // 禁止 switch 语句中的 case 穿透
-    "noImplicitAny": true, // 禁止隐式的 any 类型
     "noImplicitOverride": true, // 强制派生类中的重写方法必须使用 override 关键字
     "noImplicitReturns": true, // 检查函数所有分支是否都有返回值
-    "noImplicitThis": true, // 禁止 this 关键字具有隐式的 any 类型
     "noPropertyAccessFromIndexSignature": true, // 禁止通过点语法(.)访问通过索引签名定义的属性
     "noUncheckedIndexedAccess": true, // 对索引访问的结果添加 '| undefined' 类型，增加类型安全性
     "noUnusedLocals": false, // 禁止出现未使用的局部变量（已禁用）
     "noUnusedParameters": false, // 禁止出现未使用的函数参数（已禁用）
-    "declaration": true, // 生成相应的 .d.ts 文件
-    "declarationMap": true, // 为 .d.ts 文件生成 source map
     "removeComments": false, // 是否在编译后移除注释
     "sourceMap": true, // 生成 .map 文件，用于调试
     "allowSyntheticDefaultImports": true, // 允许从没有默认导出的模块中默认导入

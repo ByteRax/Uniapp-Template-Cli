@@ -96,7 +96,7 @@ export default async ({ mode }: ConfigEnv) => {
           }
         ],
         dts: 'src/types/auto-import.d.ts', // 'src/stores/**',
-        dirs: ['src/composables/**', 'src/stores/**', 'src/utils/**', 'src/hooks/**', 'src/utils/**', 'src/router/**'], // 自动导入 hooks
+        dirs: ['src/composables/**', 'src/stores/**', 'src/utils/**', 'src/hooks/**', 'src/router/**'], // 自动导入 hooks
         eslintrc: {
           enabled: true,
           globalsPropValue: true
@@ -105,13 +105,13 @@ export default async ({ mode }: ConfigEnv) => {
       }),
       UniOptimization({
         enable: {
-          'optimization': true,
+          optimization: true,
           'async-import': true,
           'async-component': true
         },
         dts: {
-          'enable': true,
-          'base': 'src/types',
+          enable: true,
+          base: 'src/types',
           'async-import': {
             enable: true,
             base: 'src/types',
@@ -198,16 +198,17 @@ export default async ({ mode }: ConfigEnv) => {
       hmr: true,
       port: Number.parseInt(`${VITE_APP_PORT}`, 10),
       // 仅 H5 端生效，其他端不生效（其他端走build，不走devServer)
-      proxy: JSON.parse(`${VITE_APP_PROXY_ENABLE}`)
-        ? {
-            [`${VITE_APP_PROXY_PREFIX}`]: {
-              target: VITE_SERVER_BASEURL,
-              changeOrigin: true,
-              // 后端有/api前缀则不做处理，没有则需要去掉
-              rewrite: (path) => path.replace(new RegExp(`^${VITE_APP_PROXY_PREFIX}`), '')
+      proxy:
+        VITE_APP_PROXY_ENABLE === 'true'
+          ? {
+              [`${VITE_APP_PROXY_PREFIX}`]: {
+                target: VITE_SERVER_BASEURL,
+                changeOrigin: true,
+                // 后端有/api前缀则不做处理，没有则需要去掉
+                rewrite: (path) => path.replace(new RegExp(`^${VITE_APP_PROXY_PREFIX}`), '')
+              }
             }
-          }
-        : undefined,
+          : undefined,
       // 预热文件以降低启动期间的初始页面加载时长
       warmup: {
         // 预热的客户端文件：首页、views、 components
@@ -274,8 +275,7 @@ export default async ({ mode }: ConfigEnv) => {
           : {},
         // 优化 Rollup 构建
         treeshake: {
-          moduleSideEffects: false,
-          propertyReadSideEffects: false
+          moduleSideEffects: true
         }
       }
     }

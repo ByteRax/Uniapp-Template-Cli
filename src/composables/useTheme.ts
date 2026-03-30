@@ -39,25 +39,25 @@ import type { ThemeMode } from '@/composables/types/theme'
 export function useTheme() {
   const store = useThemeStore()
 
+  // Store callback reference to ensure offThemeChange removes the correct listener
+  const onThemeChangeCallback = (res: { theme: string }) => {
+    store.setTheme(res.theme as ThemeMode)
+    console.log('系统主题已切换至:', res.theme)
+  }
+
   // 组件挂载前初始化系统主题
   onBeforeMount(() => {
     store.initSystemTheme()
     // 监听系统主题变化
     if (typeof uni !== 'undefined' && uni.onThemeChange) {
-      uni.onThemeChange((res) => {
-        // 系统主题变化时自动更新，导航栏颜色由 theme.json 自动处理
-        store.setTheme(res.theme as ThemeMode)
-        console.log('系统主题已切换至:', res.theme)
-      })
+      uni.onThemeChange(onThemeChangeCallback)
     }
   })
 
   // 组件卸载时清理监听
   onUnmounted(() => {
     if (typeof uni !== 'undefined' && uni.offThemeChange) {
-      uni.offThemeChange((res) => {
-        store.setTheme(res.theme as ThemeMode)
-      })
+      uni.offThemeChange(onThemeChangeCallback)
     }
   })
 

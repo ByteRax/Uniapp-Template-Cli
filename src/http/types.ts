@@ -38,6 +38,7 @@ export class RequestOptions implements IRequestOptions {
   data?: string | AnyObject | ArrayBuffer | Record<string, any>
   complete?: (response: any) => void
   method?: 'OPTIONS' | 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE' | 'TRACE' | 'CONNECT'
+
   dataType?: string
   responseType?: string
   timeout?: number

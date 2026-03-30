@@ -3,7 +3,9 @@ import type { App } from 'vue'
 import { pages, subPackages } from '@/pages.json'
 import { routeInterceptor } from '@/router/interceptor.ts'
 
-export type PageInstance = Page.PageInstance<AnyObject, object> & { $page: Page.PageInstance<AnyObject, object> & { fullPath: string } }
+export type PageInstance = Page.PageInstance<AnyObject, object> & {
+  $page: Page.PageInstance<AnyObject, object> & { fullPath: string }
+}
 
 export function setupRoute(app: App<Element>) {
   app.use(routeInterceptor)

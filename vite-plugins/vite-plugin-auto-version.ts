@@ -51,8 +51,12 @@ export function AutoVersion(options: AutoVersionPluginOptions = {}): Plugin {
       // 获取构建时间和 Git 提交信息
       try {
         buildDate = dayjs().format('YYYY-MM-DD HH:mm:ss')
-        gitCommitHash = execSync('git rev-parse --short HEAD', { encoding: 'utf-8' }).trim()
-        gitCommitDate = execSync('git show -s --format=%ci HEAD', { encoding: 'utf-8' }).trim()
+        gitCommitHash = execSync('git rev-parse --short HEAD', {
+          encoding: 'utf-8'
+        }).trim()
+        gitCommitDate = execSync('git show -s --format=%ci HEAD', {
+          encoding: 'utf-8'
+        }).trim()
       } catch {
         gitCommitHash = 'unknown'
         gitCommitDate = 'unknownDate'
