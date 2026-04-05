@@ -181,6 +181,7 @@ export default async ({ mode }: ConfigEnv) => {
       __UNI_PLATFORM__: JSON.stringify(UNI_PLATFORM),
       __VITE_APP_PROXY__: JSON.stringify(VITE_APP_PROXY_ENABLE)
     },
+    assetsInclude: ['**/*.md'],
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),

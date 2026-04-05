@@ -21,7 +21,9 @@
   "preloadRule": {
     "pages/index/index": {
       "network": "all",
-      "packages": ["pages-sub"]
+      "packages": [
+        "pages-sub"
+      ]
     }
   },
   "pages": [
