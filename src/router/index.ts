@@ -12,6 +12,14 @@ export function setupRoute(app: App<Element>) {
 }
 
 /**
+ * 获取当前页面栈中的最后一个页面（即当前页面）
+ */
+export const getCurrentPage = () => {
+  const pages = getCurrentPages()
+  return pages[pages.length - 1]
+}
+
+/**
  * 获取当前页面路径
  * @returns 当前页面路径
  */
@@ -21,40 +29,35 @@ export function getCurrentPath() {
   return currentPage?.route || ''
 }
 
-export function getLastPage() {
-  const pages = getCurrentPages()
-  return pages[pages.length - 1] as PageInstance
-}
-
 /**
  * 获取当前页面路由的 path 路径和 redirectPath 路径
  * path 如 '/pages/login/login'
  * redirectPath 如 '/pages/demo/base/route-interceptor'
  */
 export function currRoute() {
-  const lastPage = getLastPage() as PageInstance
+  const lastPage = getCurrentPage() as PageInstance
   if (!lastPage) {
     return {
       path: '',
       query: {}
     }
   }
-  const currRoute = lastPage.$page
+  const currRoute = (lastPage as any).$page
   // console.log('lastPage.$page:', currRoute)
   // console.log('lastPage.$page.fullpath:', currRoute.fullPath)
   // console.log('lastPage.$page.options:', currRoute.options)
   // console.log('lastPage.options:', (lastPage as any).options)
   // 经过多端测试，只有 fullPath 靠谱，其他都不靠谱
-  const { fullPath } = currRoute
+  const { fullPath } = currRoute as { fullPath: string }
   // console.log(fullPath)
   // eg: /pages/login/login?redirect=%2Fpages%2Fdemo%2Fbase%2Froute-interceptor (小程序)
   // eg: /pages/login/login?redirect=%2Fpages%2Froute-interceptor%2Findex%3Fname%3Dfeige%26age%3D30(h5)
-  return parseUrlToObj(fullPath)
+  return parseUrl(fullPath)
 }
 
-export function ensureDecodeURIComponent(url: string): string {
+export function fullyDecodeUrl(url: string): string {
   if (url.startsWith('%')) {
-    return ensureDecodeURIComponent(decodeURIComponent(url))
+    return fullyDecodeUrl(decodeURIComponent(url))
   }
   return url
 }
@@ -64,22 +67,17 @@ export function ensureDecodeURIComponent(url: string): string {
  * 比如输入url: /pages/login/login?redirect=%2Fpages%2Fdemo%2Fbase%2Froute-interceptor
  * 输出: {path: /pages/login/login, query: {redirect: /pages/demo/base/route-interceptor}}
  */
-export function parseUrlToObj(url: string) {
+export const parseUrl = (url: string) => {
   const [path, queryStr] = url.split('?')
-  // console.log(path, queryStr)
 
   if (!queryStr) {
-    return {
-      path,
-      query: {}
-    }
+    return { path, query: {} }
   }
   const query: Record<string, string> = {}
   queryStr.split('&').forEach((item) => {
     const [key, value] = item.split('=')
-    // console.log(key, value)
     if (key && value) {
-      query[key] = ensureDecodeURIComponent(value) // 这里需要统一 decodeURIComponent 一下，可以兼容h5和微信
+      query[key] = fullyDecodeUrl(value) // 这里需要统一 decodeURIComponent 一下，可以兼容h5和微信
     }
   })
   return { path, query }

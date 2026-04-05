@@ -81,7 +81,7 @@ pnpm uvm
   - 解析跳转 URL
   - 校验目标页面是否存在
   - 读取页面元数据中的 `needLogin`
-  - 基于 `useToken()` 判断登录态并按需跳转登录页
+  - 基于 `userStore()` 判断登录态并按需跳转登录页
 - `src/router/router.ts` 封装了 `uni.navigateTo` / `uni.redirectTo`：
   - 阻止 300ms 内重复跳转到同一路由
   - 通过全局锁避免并发导航
@@ -102,7 +102,7 @@ pnpm uvm
 ### 状态管理
 
 - Store 位于 `src/stores/`，并通过自动导入直接在业务代码中使用。
-- `src/stores/useToken.ts` 是登录态源头：
+- `src/stores/userStore.ts` 是登录态源头：
   - 持久化 token 信息
   - 维护 token 过期时间
   - 封装登录、微信登录、登出和有效 token 获取逻辑

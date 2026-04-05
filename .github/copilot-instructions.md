@@ -24,7 +24,7 @@ applyTo: "**"
 
 - 路由名称自动生成规则: 路径中的 `/.-` 替换为 `_` 并转大写 (见 `vite-plugins/vite-config-uni-pages.ts`)
     - 示例: `pages-sub/login/login.vue` → 路由名: `PAGES_SUB_LOGIN_LOGIN`
-- 路由拦截器在 `src/router/interceptor.ts`,基于 `useToken` 的登录状态判断
+- 路由拦截器在 `src/router/interceptor.ts`,基于 `userStore` 的登录状态判断
 - 路由常量定义在 `src/router/router.ts`,如 `HOME_PAGE`, `LOGIN_PAGE`, `NOT_FOUND_PAGE`
 
 ### 网络请求架构

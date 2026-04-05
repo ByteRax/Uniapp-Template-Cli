@@ -22,7 +22,7 @@
 11. 补全 `.agent/` 目录结构（README.md、AINOTE.md、Tasks/、System/、SOP/）
 
 ### Phase 3: 代码整洁
-12. 清理调试 console.log（useToken.ts、interceptor.ts）
+12. 清理调试 console.log（userStore.ts、interceptor.ts）
 13. 移除测试路由方法（router.ts 中的 showTestA/showTestB）
 14. 修复 vite.config.ts 中 terser 与 esbuild 重复的 console 移除配置
 15. theme store 添加 persist 持久化
@@ -39,7 +39,7 @@
 - `.husky/` - pre-commit + commit-msg 钩子
 - `commitlint.config.ts` - 新建
 - `.gitignore` - 修复
-- `src/stores/useToken.ts` - 清理日志
+- `src/stores/userStore.ts` - 清理日志
 - `src/stores/theme.ts` - 添加持久化
 - `src/router/router.ts` - 清理测试方法
 

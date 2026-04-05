@@ -5,7 +5,11 @@ import { generateDarkColorRules, generateDarkColorShortcuts } from './uno-color-
 
 export default defineConfig({
   presets: [
-    presetUni(),
+    presetUni({
+      attributify: {
+        prefixedOnly: true // 属性化模式需要前缀
+      }
+    }),
     presetIcons({
       scale: 1.2,
       warn: true,
@@ -53,6 +57,8 @@ export default defineConfig({
     ],
     ['pt-safe', { 'padding-top': 'env(safe-area-inset-top)' }],
     ['pb-safe', { 'padding-bottom': 'env(safe-area-inset-bottom)' }],
+    // 动态规则
+    [/^size-(\d+)$/, ([, d]) => ({ width: `${d}rpx`, height: `${d}rpx` })],
     // 动态暗色模式颜色规则
     ...generateDarkColorRules()
   ],

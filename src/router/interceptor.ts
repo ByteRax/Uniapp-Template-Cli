@@ -3,7 +3,7 @@
  */
 import { getAllPages, getLastPage, parseUrlToObj } from '@/router'
 import { HOME_PAGE, LOGIN_PAGE } from '@/router/router.ts'
-import { useToken } from '@/stores/useToken.ts'
+import { userStore } from '@/stores/userStore.ts'
 
 export const FG_LOG_ENABLE = false
 
@@ -39,7 +39,7 @@ export const navigateToInterceptor = {
       router.notFound()
       return false // 明确表示阻止原路由继续执行
     }
-    const tokenStore = useToken()
+    const tokenStore = userStore()
     if (FG_LOG_ENABLE) console.log('tokenStore.hasLogin:', tokenStore.hasLogin())
     // 不管黑白名单，登录了就直接去吧（但是当前不能是登录页）
     if (tokenStore.hasLogin()) {

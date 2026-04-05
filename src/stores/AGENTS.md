@@ -11,7 +11,7 @@
 | File | Description |
 |------|-------------|
 | `index.ts` | 创建 Pinia、配置持久化插件并提前 `setActivePinia(store)`。 |
-| `useToken.ts` | 登录态核心 store，管理 token、过期时间和登录/登出流程。 |
+| `userStore.ts` | 登录态核心 store，管理 token、过期时间和登录/登出流程。 |
 | `user.ts` | 用户信息 store。 |
 | `theme.ts` | 主题状态与主题变量 store。 |
 

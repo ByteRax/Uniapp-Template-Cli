@@ -9,9 +9,11 @@ declare global {
   const Apis: typeof import('../utils/Apis').Apis
   const CommonUtil: typeof import('wot-design-uni').CommonUtil
   const EffectScope: typeof import('vue').EffectScope
+  const EventNames: typeof import('../composables/eventBus/type').EventNames
   const FG_LOG_ENABLE: typeof import('../router/interceptor').FG_LOG_ENABLE
   const HOME_PAGE: typeof import('../router/router').HOME_PAGE
   const LOGIN_PAGE: typeof import('../router/router').LOGIN_PAGE
+  const Logger: typeof import('../utils/logger').Logger
   const NOT_FOUND_PAGE: typeof import('../router/router').NOT_FOUND_PAGE
   const ZPagingVirtualItem: typeof import('z-paging/types').ZPagingVirtualItem
   const acceptHMRUpdate: typeof import('pinia').acceptHMRUpdate
@@ -23,34 +25,47 @@ declare global {
   const createPinia: typeof import('pinia').createPinia
   const currRoute: typeof import('../router/index').currRoute
   const customRef: typeof import('vue').customRef
-  const debounce: typeof import('../utils/index').debounce
+  const debounce: typeof import('../utils/function').debounce
   const deepClone: typeof import('../utils/object').deepClone
   const defineAsyncComponent: typeof import('vue').defineAsyncComponent
   const defineComponent: typeof import('vue').defineComponent
   const defineStore: typeof import('pinia').defineStore
   const effectScope: typeof import('vue').effectScope
   const ensureDecodeURIComponent: typeof import('../router/index').ensureDecodeURIComponent
+  const eventBus: typeof import('../composables/eventBus/type').eventBus
   const formatDate: typeof import('../utils/date').formatDate
+  const fullyDecodeUrl: typeof import('../router/index').fullyDecodeUrl
   const generateUUID: typeof import('../utils/index').generateUUID
   const getActivePinia: typeof import('pinia').getActivePinia
   const getAllPages: typeof import('../router/index').getAllPages
   const getCurrentInstance: typeof import('vue').getCurrentInstance
+  const getCurrentPage: typeof import('../router/index').getCurrentPage
   const getCurrentPath: typeof import('../router/index').getCurrentPath
   const getCurrentScope: typeof import('vue').getCurrentScope
   const getCurrentWatcher: typeof import('vue').getCurrentWatcher
+  const getDeviceType: typeof import('../utils/platform').getDeviceType
   const getGraphemeLength: typeof import('../utils/string').getGraphemeLength
   const getLastPage: typeof import('../router/index').getLastPage
+  const getOSType: typeof import('../utils/platform').getOSType
   const getValue: typeof import('../utils/object').getValue
   const h: typeof import('vue').h
   const hasProperty: typeof import('../utils/object').hasProperty
+  const hasWeixinJSBridge: typeof import('../utils/platform').hasWeixinJSBridge
   const inject: typeof import('vue').inject
+  const isAlipayEnvironment: typeof import('../utils/platform').isAlipayEnvironment
+  const isAlipayOfficialH5: typeof import('../utils/platform').isAlipayOfficialH5
+  const isAndroid: typeof import('../utils/platform').isAndroid
   const isApp: typeof import('../utils/platform').isApp
   const isArray: typeof import('../utils/object').isArray
   const isEmpty: typeof import('../utils/object').isEmpty
   const isH5: typeof import('../utils/platform').isH5
   const isHarmony: typeof import('../utils/platform').isHarmony
+  const isIOS: typeof import('../utils/platform').isIOS
+  const isInDevTools: typeof import('../utils/platform').isInDevTools
   const isJSON: typeof import('../utils/json').isJSON
+  const isMobileDevice: typeof import('../utils/platform').isMobileDevice
   const isMp: typeof import('../utils/platform').isMp
+  const isMpAlipay: typeof import('../utils/platform').isMpAlipay
   const isMpAplipay: typeof import('../utils/platform').isMpAplipay
   const isMpToutiao: typeof import('../utils/platform').isMpToutiao
   const isMpWeixin: typeof import('../utils/platform').isMpWeixin
@@ -66,10 +81,14 @@ declare global {
   const isShallow: typeof import('vue').isShallow
   const isShowLoadingOptions: typeof import('../utils/is').isShowLoadingOptions
   const isString: typeof import('../utils/object').isString
+  const isTabletDevice: typeof import('../utils/platform').isTabletDevice
   const isToastOptions: typeof import('../utils/is').isToastOptions
   const isUUID: typeof import('../utils/uuid').isUUID
+  const isWechatEnvironment: typeof import('../utils/platform').isWechatEnvironment
+  const isWechatOfficialH5: typeof import('../utils/platform').isWechatOfficialH5
   const judgeIsExcludePath: typeof import('../router/interceptor').judgeIsExcludePath
   const judgeIsNeedLoginPath: typeof import('../router/interceptor').judgeIsNeedLoginPath
+  const logger: typeof import('../utils/logger').default
   const mapActions: typeof import('pinia').mapActions
   const mapGetters: typeof import('pinia').mapGetters
   const mapState: typeof import('pinia').mapState
@@ -118,6 +137,7 @@ declare global {
   const onWatcherCleanup: typeof import('vue').onWatcherCleanup
   const parse: typeof import('../utils/json').parse
   const parseJSON: typeof import('../utils/json').parseJSON
+  const parseUrl: typeof import('../router/index').parseUrl
   const parseUrlToObj: typeof import('../router/index').parseUrlToObj
   const platform: typeof import('../utils/platform').default
   const provide: typeof import('vue').provide
@@ -142,7 +162,8 @@ declare global {
   const stores: typeof import('../stores/index').default
   const stringify: typeof import('../utils/json').stringify
   const themeColorOptions: typeof import('../composables/types/theme').themeColorOptions
-  const throttle: typeof import('../utils/index').throttle
+  const throttle: typeof import('../utils/function').throttle
+  const to: typeof import('../utils/to').to
   const toFloat: typeof import('../utils/number').toFloat
   const toInt: typeof import('../utils/number').toInt
   const toRaw: typeof import('vue').toRaw
@@ -153,26 +174,34 @@ declare global {
   const ui: typeof import('../utils/ui').default
   const unref: typeof import('vue').unref
   const useAttrs: typeof import('vue').useAttrs
+  const useClipboard: typeof import('../composables/useClipboard').useClipboard
   const useComponentRef: typeof import('../utils/ref').useComponentRef
+  const useCountdown: typeof import('../composables/useCountdown').useCountdown
   const useCssModule: typeof import('vue').useCssModule
   const useCssVars: typeof import('vue').useCssVars
+  const useDebounce: typeof import('../composables/useDebounceThrottle').useDebounce
+  const useEventBus: typeof import('../composables/useEventBus').useEventBus
   const useExposedRef: typeof import('../utils/ref').useExposedRef
   const useGlobalLoading: typeof import('../composables/useGlobalLoading').useGlobalLoading
   const useGlobalMessage: typeof import('../composables/useGlobalMessage').useGlobalMessage
   const useGlobalPage: typeof import('../composables/useGlobalPage').useGlobalPage
   const useGlobalToast: typeof import('../composables/useGlobalToast').useGlobalToast
   const useId: typeof import('vue').useId
+  const useMediaQuery: typeof import('../composables/useMediaQuery').useMediaQuery
   const useMessage: typeof import('wot-design-uni').useMessage
   const useModel: typeof import('vue').useModel
   const useNotify: typeof import('wot-design-uni').useNotify
+  const usePlatformAdapter: typeof import('../composables/usePlatformAdapter').usePlatformAdapter
   const useScroll: typeof import('../composables/useScroll').useScroll
   const useSlots: typeof import('vue').useSlots
   const useTemplateRef: typeof import('vue').useTemplateRef
   const useTheme: typeof import('../composables/useTheme').useTheme
   const useThemeStore: typeof import('../stores/theme').useThemeStore
+  const useThrottle: typeof import('../composables/useDebounceThrottle').useThrottle
   const useToast: typeof import('wot-design-uni').useToast
-  const useToken: typeof import('../stores/useToken').useToken
+  const useToken: typeof import('../stores/userStore.ts').useToken
   const useUserStore: typeof import('../stores/user').useUserStore
+  const userStore: typeof import('../stores/userStore').userStore
   const uuid: typeof import('../utils/uuid').uuid
   const watch: typeof import('vue').watch
   const watchEffect: typeof import('vue').watchEffect
@@ -186,6 +215,9 @@ declare global {
   export type { Component, Slot, Slots, ComponentPublicInstance, ComputedRef, DirectiveBinding, ExtractDefaultPropTypes, ExtractPropTypes, ExtractPublicPropTypes, InjectionKey, PropType, Ref, ShallowRef, MaybeRef, MaybeRefOrGetter, VNode, WritableComputedRef } from 'vue'
   import('vue')
   // @ts-ignore
+  export type { EventName, EventCallback, UseEventBusReturn } from '../composables/eventBus/type'
+  import('../composables/eventBus/type')
+  // @ts-ignore
   export type { ThemeColorOption, ThemeMode, ThemeState, SystemThemeState } from '../composables/types/theme'
   import('../composables/types/theme')
   // @ts-ignore
@@ -194,6 +226,9 @@ declare global {
   // @ts-ignore
   export type { Apis } from '../utils/Apis'
   import('../utils/Apis')
+  // @ts-ignore
+  export type { PlatformType } from '../utils/platform'
+  import('../utils/platform')
   // @ts-ignore
   export type { CommonSingleType, CommonAllType } from '../utils/type'
   import('../utils/type')
@@ -213,6 +248,7 @@ declare module 'vue' {
     readonly Apis: UnwrapRef<typeof import('../utils/Apis')['Apis']>
     readonly CommonUtil: UnwrapRef<typeof import('wot-design-uni')['CommonUtil']>
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
+    readonly EventNames: UnwrapRef<typeof import('../composables/eventBus/type')['EventNames']>
     readonly FG_LOG_ENABLE: UnwrapRef<typeof import('../router/interceptor')['FG_LOG_ENABLE']>
     readonly HOME_PAGE: UnwrapRef<typeof import('../router/router')['HOME_PAGE']>
     readonly LOGIN_PAGE: UnwrapRef<typeof import('../router/router')['LOGIN_PAGE']>
@@ -227,34 +263,43 @@ declare module 'vue' {
     readonly createPinia: UnwrapRef<typeof import('pinia')['createPinia']>
     readonly currRoute: UnwrapRef<typeof import('../router/index')['currRoute']>
     readonly customRef: UnwrapRef<typeof import('vue')['customRef']>
-    readonly debounce: UnwrapRef<typeof import('../utils/index')['debounce']>
+    readonly debounce: UnwrapRef<typeof import('../utils/function')['debounce']>
     readonly deepClone: UnwrapRef<typeof import('../utils/object')['deepClone']>
     readonly defineAsyncComponent: UnwrapRef<typeof import('vue')['defineAsyncComponent']>
     readonly defineComponent: UnwrapRef<typeof import('vue')['defineComponent']>
     readonly defineStore: UnwrapRef<typeof import('pinia')['defineStore']>
     readonly effectScope: UnwrapRef<typeof import('vue')['effectScope']>
-    readonly ensureDecodeURIComponent: UnwrapRef<typeof import('../router/index')['ensureDecodeURIComponent']>
+    readonly eventBus: UnwrapRef<typeof import('../composables/eventBus/type')['eventBus']>
     readonly formatDate: UnwrapRef<typeof import('../utils/date')['formatDate']>
+    readonly fullyDecodeUrl: UnwrapRef<typeof import('../router/index')['fullyDecodeUrl']>
     readonly generateUUID: UnwrapRef<typeof import('../utils/index')['generateUUID']>
     readonly getActivePinia: UnwrapRef<typeof import('pinia')['getActivePinia']>
     readonly getAllPages: UnwrapRef<typeof import('../router/index')['getAllPages']>
     readonly getCurrentInstance: UnwrapRef<typeof import('vue')['getCurrentInstance']>
+    readonly getCurrentPage: UnwrapRef<typeof import('../router/index')['getCurrentPage']>
     readonly getCurrentPath: UnwrapRef<typeof import('../router/index')['getCurrentPath']>
     readonly getCurrentScope: UnwrapRef<typeof import('vue')['getCurrentScope']>
     readonly getCurrentWatcher: UnwrapRef<typeof import('vue')['getCurrentWatcher']>
-    readonly getLastPage: UnwrapRef<typeof import('../router/index')['getLastPage']>
+    readonly getDeviceType: UnwrapRef<typeof import('../utils/platform')['getDeviceType']>
+    readonly getOSType: UnwrapRef<typeof import('../utils/platform')['getOSType']>
     readonly getValue: UnwrapRef<typeof import('../utils/object')['getValue']>
     readonly h: UnwrapRef<typeof import('vue')['h']>
     readonly hasProperty: UnwrapRef<typeof import('../utils/object')['hasProperty']>
+    readonly hasWeixinJSBridge: UnwrapRef<typeof import('../utils/platform')['hasWeixinJSBridge']>
     readonly inject: UnwrapRef<typeof import('vue')['inject']>
+    readonly isAlipayEnvironment: UnwrapRef<typeof import('../utils/platform')['isAlipayEnvironment']>
+    readonly isAlipayOfficialH5: UnwrapRef<typeof import('../utils/platform')['isAlipayOfficialH5']>
+    readonly isAndroid: UnwrapRef<typeof import('../utils/platform')['isAndroid']>
     readonly isApp: UnwrapRef<typeof import('../utils/platform')['isApp']>
     readonly isArray: UnwrapRef<typeof import('../utils/object')['isArray']>
     readonly isEmpty: UnwrapRef<typeof import('../utils/object')['isEmpty']>
-    readonly isH5: UnwrapRef<typeof import('../utils/platform')['isH5']>
     readonly isHarmony: UnwrapRef<typeof import('../utils/platform')['isHarmony']>
+    readonly isIOS: UnwrapRef<typeof import('../utils/platform')['isIOS']>
+    readonly isInDevTools: UnwrapRef<typeof import('../utils/platform')['isInDevTools']>
     readonly isJSON: UnwrapRef<typeof import('../utils/json')['isJSON']>
+    readonly isMobileDevice: UnwrapRef<typeof import('../utils/platform')['isMobileDevice']>
     readonly isMp: UnwrapRef<typeof import('../utils/platform')['isMp']>
-    readonly isMpAplipay: UnwrapRef<typeof import('../utils/platform')['isMpAplipay']>
+    readonly isMpAlipay: UnwrapRef<typeof import('../utils/platform')['isMpAlipay']>
     readonly isMpToutiao: UnwrapRef<typeof import('../utils/platform')['isMpToutiao']>
     readonly isMpWeixin: UnwrapRef<typeof import('../utils/platform')['isMpWeixin']>
     readonly isNotEmpty: UnwrapRef<typeof import('../utils/object')['isNotEmpty']>
@@ -269,8 +314,11 @@ declare module 'vue' {
     readonly isShallow: UnwrapRef<typeof import('vue')['isShallow']>
     readonly isShowLoadingOptions: UnwrapRef<typeof import('../utils/is')['isShowLoadingOptions']>
     readonly isString: UnwrapRef<typeof import('../utils/object')['isString']>
+    readonly isTabletDevice: UnwrapRef<typeof import('../utils/platform')['isTabletDevice']>
     readonly isToastOptions: UnwrapRef<typeof import('../utils/is')['isToastOptions']>
     readonly isUUID: UnwrapRef<typeof import('../utils/uuid')['isUUID']>
+    readonly isWechatEnvironment: UnwrapRef<typeof import('../utils/platform')['isWechatEnvironment']>
+    readonly isWechatOfficialH5: UnwrapRef<typeof import('../utils/platform')['isWechatOfficialH5']>
     readonly judgeIsNeedLoginPath: UnwrapRef<typeof import('../router/interceptor')['judgeIsNeedLoginPath']>
     readonly mapActions: UnwrapRef<typeof import('pinia')['mapActions']>
     readonly mapGetters: UnwrapRef<typeof import('pinia')['mapGetters']>
@@ -320,7 +368,7 @@ declare module 'vue' {
     readonly onWatcherCleanup: UnwrapRef<typeof import('vue')['onWatcherCleanup']>
     readonly parse: UnwrapRef<typeof import('../utils/json')['parse']>
     readonly parseJSON: UnwrapRef<typeof import('../utils/json')['parseJSON']>
-    readonly parseUrlToObj: UnwrapRef<typeof import('../router/index')['parseUrlToObj']>
+    readonly parseUrl: UnwrapRef<typeof import('../router/index')['parseUrl']>
     readonly platform: UnwrapRef<typeof import('../utils/platform')['default']>
     readonly provide: UnwrapRef<typeof import('vue')['provide']>
     readonly reactive: UnwrapRef<typeof import('vue')['reactive']>
@@ -343,7 +391,8 @@ declare module 'vue' {
     readonly stores: UnwrapRef<typeof import('../stores/index')['default']>
     readonly stringify: UnwrapRef<typeof import('../utils/json')['stringify']>
     readonly themeColorOptions: UnwrapRef<typeof import('../composables/types/theme')['themeColorOptions']>
-    readonly throttle: UnwrapRef<typeof import('../utils/index')['throttle']>
+    readonly throttle: UnwrapRef<typeof import('../utils/function')['throttle']>
+    readonly to: UnwrapRef<typeof import('../utils/to')['to']>
     readonly toFloat: UnwrapRef<typeof import('../utils/number')['toFloat']>
     readonly toInt: UnwrapRef<typeof import('../utils/number')['toInt']>
     readonly toRaw: UnwrapRef<typeof import('vue')['toRaw']>
@@ -354,26 +403,33 @@ declare module 'vue' {
     readonly ui: UnwrapRef<typeof import('../utils/ui')['default']>
     readonly unref: UnwrapRef<typeof import('vue')['unref']>
     readonly useAttrs: UnwrapRef<typeof import('vue')['useAttrs']>
+    readonly useClipboard: UnwrapRef<typeof import('../composables/useClipboard')['useClipboard']>
     readonly useComponentRef: UnwrapRef<typeof import('../utils/ref')['useComponentRef']>
+    readonly useCountdown: UnwrapRef<typeof import('../composables/useCountdown')['useCountdown']>
     readonly useCssModule: UnwrapRef<typeof import('vue')['useCssModule']>
     readonly useCssVars: UnwrapRef<typeof import('vue')['useCssVars']>
+    readonly useDebounce: UnwrapRef<typeof import('../composables/useDebounceThrottle')['useDebounce']>
+    readonly useEventBus: UnwrapRef<typeof import('../composables/useEventBus')['useEventBus']>
     readonly useExposedRef: UnwrapRef<typeof import('../utils/ref')['useExposedRef']>
     readonly useGlobalLoading: UnwrapRef<typeof import('../composables/useGlobalLoading')['useGlobalLoading']>
     readonly useGlobalMessage: UnwrapRef<typeof import('../composables/useGlobalMessage')['useGlobalMessage']>
     readonly useGlobalPage: UnwrapRef<typeof import('../composables/useGlobalPage')['useGlobalPage']>
     readonly useGlobalToast: UnwrapRef<typeof import('../composables/useGlobalToast')['useGlobalToast']>
     readonly useId: UnwrapRef<typeof import('vue')['useId']>
+    readonly useMediaQuery: UnwrapRef<typeof import('../composables/useMediaQuery')['useMediaQuery']>
     readonly useMessage: UnwrapRef<typeof import('wot-design-uni')['useMessage']>
     readonly useModel: UnwrapRef<typeof import('vue')['useModel']>
     readonly useNotify: UnwrapRef<typeof import('wot-design-uni')['useNotify']>
+    readonly usePlatformAdapter: UnwrapRef<typeof import('../composables/usePlatformAdapter')['usePlatformAdapter']>
     readonly useScroll: UnwrapRef<typeof import('../composables/useScroll')['useScroll']>
     readonly useSlots: UnwrapRef<typeof import('vue')['useSlots']>
     readonly useTemplateRef: UnwrapRef<typeof import('vue')['useTemplateRef']>
     readonly useTheme: UnwrapRef<typeof import('../composables/useTheme')['useTheme']>
     readonly useThemeStore: UnwrapRef<typeof import('../stores/theme')['useThemeStore']>
+    readonly useThrottle: UnwrapRef<typeof import('../composables/useDebounceThrottle')['useThrottle']>
     readonly useToast: UnwrapRef<typeof import('wot-design-uni')['useToast']>
-    readonly useToken: UnwrapRef<typeof import('../stores/useToken')['useToken']>
     readonly useUserStore: UnwrapRef<typeof import('../stores/user')['useUserStore']>
+    readonly userStore: UnwrapRef<typeof import('../stores/userStore')['userStore']>
     readonly uuid: UnwrapRef<typeof import('../utils/uuid')['uuid']>
     readonly watch: UnwrapRef<typeof import('vue')['watch']>
     readonly watchEffect: UnwrapRef<typeof import('vue')['watchEffect']>

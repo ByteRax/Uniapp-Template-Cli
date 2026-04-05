@@ -105,13 +105,14 @@ export default async ({ mode }: ConfigEnv) => {
       }),
       UniOptimization({
         enable: {
-          optimization: true,
-          'async-import': true,
-          'async-component': true
+          'optimization': true, // 启用分包优化
+          'async-import': true, // 启用异步导入
+          'async-component': true // 启用异步组件
         },
+        // TypeScript 类型支持
         dts: {
-          enable: true,
-          base: 'src/types',
+          'enable': true,
+          'base': 'src/types',
           'async-import': {
             enable: true,
             base: 'src/types',
@@ -127,7 +128,7 @@ export default async ({ mode }: ConfigEnv) => {
         },
         logger: false
       }),
-      // 图片优化插件
+      // 图片压缩插件
       isBuild &&
         viteImagemin({
           gifsicle: {
@@ -137,13 +138,20 @@ export default async ({ mode }: ConfigEnv) => {
           optipng: {
             optimizationLevel: 7
           },
+          // WebP 压缩
+          webp: {
+            quality: 85
+          },
+          // JPEG 压缩
           mozjpeg: {
             quality: 85
           },
+          // PNG 压缩
           pngquant: {
             quality: [0.8, 0.9],
             speed: 4
           },
+          // SVG 压缩
           svgo: {
             plugins: [{ name: 'removeViewBox' }, { name: 'removeEmptyAttrs', active: false }]
           }
@@ -221,7 +229,7 @@ export default async ({ mode }: ConfigEnv) => {
     },
     build: {
       sourcemap: !isBuild,
-      target: 'es2020',
+      target: 'esnext',
       cssTarget: 'chrome61',
       cssCodeSplit: true, // CSS 代码分割
       cssMinify: isBuild ? 'esbuild' : false, // 开发环境不用压缩
@@ -244,6 +252,8 @@ export default async ({ mode }: ConfigEnv) => {
       rollupOptions: {
         output: isBuild
           ? {
+              // 启用 gzip 友好的分割
+              experimentalMinChunkSize: 10000,
               chunkFileNames: 'static/js/[name]-[hash].js',
               entryFileNames: 'static/js/[name]-[hash].js',
               assetFileNames: 'static/[ext]/[name]-[hash][extname]',
@@ -278,6 +288,19 @@ export default async ({ mode }: ConfigEnv) => {
         treeshake: {
           moduleSideEffects: true
         }
+      },
+      server: {
+        // H5 启用 HTTP/2 推送
+        headers: {
+          'Link': '</assets/main.js>; rel=preload; as=script'
+        }
+      },
+      postcss: {
+        plugins: [
+          purgecss({
+            content: ['./src/**/*.vue', './src/**/*.ts']
+          })
+        ]
       }
     }
   })

@@ -27,7 +27,7 @@
 | M5 | tsconfig 中 strict 隐含的 8 个冗余选项 | tsconfig.json:36-57 |
 | M6 | 应用项目不需要 declaration/declarationMap | tsconfig.json:50-51 |
 | M7 | 暗色主题双轨制（Wot CSS 变量 vs UnoCSS color-mapping） | 全局架构 |
-| M8 | useToken.ts 中 tryGetValidToken 逻辑死代码 | src/stores/useToken.ts |
+| M8 | userStore.ts 中 tryGetValidToken 逻辑死代码 | src/stores/userStore.ts |
 | M9 | 三个 Global 组件大量重复代码 | src/components/common/ |
 | M10 | 主题色三处定义不一致（#0099ff / #4D7FFF / #0957DE） | variable.scss / theme.ts / uno.config.ts |
 | M11 | esbuild.drop 与 terser 重复配置 | vite.config.ts:244 |
@@ -57,3 +57,10 @@
 
 - 用户选择"仅生成报告"，未做任何代码修改
 - 报告已生成，待用户决定后续执行范围
+
+## 后续补充（2026-04-05）
+
+- 按用户需求补齐事件总线事件名：`USER_LOGIN`、`USER_LOGOUT`、`USER_PROFILE_UPDATED`、`NETWORK_STATUS_CHANGED`
+- 相关改动文件：`src/composables/eventBus/type.ts`、`src/composables/useEventBus.ts`
+- 关键修复：显式导出并导入 `EventNames` / `eventBus` / 类型，避免模块作用域下变量缺失
+- 校验结果：上述两个文件在 IDE `get_errors` 检查中通过（仅保留 `clear` 未使用告警）

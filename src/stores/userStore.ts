@@ -11,7 +11,7 @@ const tokenInfoState = {
   expiresIn: 0
 }
 
-export const useToken = defineStore(
+export const userStore = defineStore(
   'token',
   () => {
     // 定义用户信息

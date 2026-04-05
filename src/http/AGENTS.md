@@ -41,7 +41,7 @@
 ## Dependencies
 
 ### Internal
-- 依赖 `src/stores/useToken.ts`、UI 状态能力与路由跳转逻辑。
+- 依赖 `src/stores/userStore.ts`、UI 状态能力与路由跳转逻辑。
 - 被 `src/api/` 或统一请求入口封装调用。
 
 ### External

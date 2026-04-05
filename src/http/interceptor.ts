@@ -1,6 +1,6 @@
 import type { RequestConfig, RequestInterceptor, RequestMeta, RequestOptions, ResponseResult } from '@/http/types.ts'
 import { ResponseData } from '@/http/types.ts'
-import { useToken } from '@/stores/useToken.ts'
+import { userStore } from '@/stores/userStore.ts'
 import { parse, stringify } from '@/utils/json.ts'
 
 // 请求基准地址
@@ -55,7 +55,7 @@ export const httpInterceptor: RequestInterceptor = {
     pendingRequests.set(requestKey, options)
     meta.requestKey = requestKey
     if (meta.loading) addLoading()
-    const tokenStore = useToken()
+    const tokenStore = userStore()
     const token = tokenStore.validToken
     if (token) {
       options.header['Authorization'] = `Bearer ${token}`
@@ -80,7 +80,7 @@ export const httpInterceptor: RequestInterceptor = {
       if (!isLoggingOut) {
         isLoggingOut = true
         try {
-          const tokenStore = useToken()
+          const tokenStore = userStore()
           await tokenStore.logout()
           uni.navigateTo({ url: '/pages-sub/login/login' })
         } finally {
