@@ -294,13 +294,6 @@ export default async ({ mode }: ConfigEnv) => {
         headers: {
           'Link': '</assets/main.js>; rel=preload; as=script'
         }
-      },
-      postcss: {
-        plugins: [
-          purgecss({
-            content: ['./src/**/*.vue', './src/**/*.ts']
-          })
-        ]
       }
     }
   })
