@@ -24,7 +24,7 @@
 
 | Directory | Purpose |
 |-----------|---------|
-| `api/` | API 方法与接口类型。 |
+| `api/` | API 方法与接口类型（见 `api/AGENTS.md`）。 |
 | `components/` | 通用组件、业务组件和布局组件（见 `components/AGENTS.md`）。 |
 | `composables/` | 组合式能力与部分全局状态封装（见 `composables/AGENTS.md`）。 |
 | `http/` | 请求封装与拦截器（见 `http/AGENTS.md`）。 |
@@ -34,8 +34,8 @@
 | `stores/` | Pinia store 与持久化状态（见 `stores/AGENTS.md`）。 |
 | `utils/` | 通用工具函数（见 `utils/AGENTS.md`）。 |
 | `hooks/` | 通过自动导入暴露的 hooks。 |
-| `styles/` | 全局样式资源。 |
-| `types/` | 项目类型声明，其中部分文件为自动生成产物。 |
+| `styles/` | 全局样式资源（见 `styles/AGENTS.md`）。 |
+| `types/` | 项目类型声明，其中部分文件为自动生成产物（见 `types/AGENTS.md`）。 |
 | `static/` | 静态资源目录。 |
 | `layout/` | 预留布局目录。 |
 | `views/` | 预留页面视图目录。 |

@@ -1,5 +1,5 @@
 <!-- Parent: ../AGENTS.md -->
-<!-- Generated: 2026-03-28 | Updated: 2026-03-28 -->
+<!-- Generated: 2026-03-28 | Updated: 2026-04-30 -->
 
 # utils
 
@@ -13,6 +13,10 @@
 | `index.ts` | 暴露最常用的公共导出。 |
 | `Apis.ts` | 聚合请求实例与常用 UI 操作入口。 |
 | `ui.ts` | toast / loading 等 UI 工具封装。 |
+| `to.ts` | Go 风格 `[error, data]` 元组，避免 try-catch 嵌套。 |
+| `env.ts` | isDev / isProd / isDebug 环境常量。 |
+| `check.ts` | 小程序/App 更新检查，自动识别平台。 |
+| `cookie.ts` | H5 Cookie 操作（setCookie、buildUniRequestCookieString）。 |
 | `date.ts` | 日期时间格式化能力。 |
 | `object.ts` | 对象读取、设置、深拷贝等工具。 |
 | `platform.ts` | 多端平台判断能力。 |

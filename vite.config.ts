@@ -197,6 +197,7 @@ export default async ({ mode }: ConfigEnv) => {
       open: !isBuild,
       hmr: true,
       port: Number.parseInt(`${VITE_APP_PORT}`, 10),
+      strictPort: true, // 端口占用时直接报错，避免浏览器访问错地址
       // 仅 H5 端生效，其他端不生效（其他端走build，不走devServer)
       proxy:
         VITE_APP_PROXY_ENABLE === 'true'
@@ -220,8 +221,9 @@ export default async ({ mode }: ConfigEnv) => {
     },
     build: {
       sourcemap: !isBuild,
-      target: 'es2020',
+      target: 'esnext',
       cssTarget: 'chrome61',
+      experimentalMinChunkSize: 10000, // gzip 友好的 chunk 分割
       cssCodeSplit: true, // CSS 代码分割
       cssMinify: isBuild ? 'esbuild' : false, // 开发环境不用压缩
       minify: isBuild ? 'terser' : false, // 开发环境不用压缩

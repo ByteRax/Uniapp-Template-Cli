@@ -11,6 +11,7 @@
 | File | Description |
 |------|-------------|
 | `upload-weixin.js` | 读取版本号、环境变量、私钥和命令参数，执行微信小程序上传。 |
+| `force-kill-port.mjs` | 读取 `VITE_APP_PORT` 环境变量，跨平台强杀端口占用进程。通过 `pnpm port:free` 调用。 |
 
 ## Subdirectories
 

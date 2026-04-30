@@ -21,9 +21,9 @@
 
 | Directory | Purpose |
 |-----------|---------|
-| `common/` | 跨页面复用的全局基础组件。 |
-| `business/` | 贴近业务语义的组件。 |
-| `layout/` | 页面布局和容器类组件。 |
+| `common/` | 跨页面复用的全局基础组件（见 `common/AGENTS.md`）。 |
+| `business/` | 贴近业务语义的组件（见 `business/AGENTS.md`）。 |
+| `layout/` | 页面布局和容器类组件（见 `layout/AGENTS.md`）。 |
 
 ## For AI Agents
 

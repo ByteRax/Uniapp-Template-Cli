@@ -1,6 +1,7 @@
 import uni from '@uni-helper/eslint-config'
+import unocss from '@unocss/eslint-plugin'
 
-export default uni({
+const config = uni({
   vue: true,
   markdown: false,
   ignores: [
@@ -95,6 +96,7 @@ export default uni({
     'vue/valid-v-on': 'error',
     'vue/valid-v-slot': 'error',
     'vue/v-for-delimiter-style': ['error', 'in'],
+    'vue/html-comment-content-spacing': ['error', 'always'],
     'vue/singleline-html-element-content-newline': 'off', // 禁用单行元素内容换行检查，避免与 Oxfmt 冲突
     'vue/comma-dangle': 'off', // 禁用 Vue 文件中的尾随逗号检查，避免与 Oxfmt 冲突
 
@@ -158,3 +160,7 @@ export default uni({
     'style/operator-linebreak': 'off' // 同时禁用 style/ 前缀的规则
   }
 })
+
+config.prepend(unocss.configs.flat)
+
+export default config

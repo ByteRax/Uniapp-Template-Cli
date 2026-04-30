@@ -5,7 +5,10 @@ import { generateDarkColorRules, generateDarkColorShortcuts } from './uno-color-
 
 export default defineConfig({
   presets: [
-    presetUni(),
+    presetUni({
+      // 当前项目未使用 attributify 语法，关闭后可避免 uni 模板属性被误识别成非法样式规则
+      attributify: false
+    }),
     presetIcons({
       scale: 1.2,
       warn: true,

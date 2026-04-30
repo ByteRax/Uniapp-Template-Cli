@@ -14,6 +14,9 @@ node_modules
 .DS_Store
 dist
 *.local
+private*.key
+private.*.key
+private.key
 
 # Editor directories and files
 .idea
@@ -29,7 +32,11 @@ src/types/components.d.ts
 src/types/uni-pages.d.ts
 src/types/async-import.d.ts
 src/types/async-component.d.ts
+src/pages.json
+src/manifest.json
 
 # Local env overrides
 env/.env.*.local
 /.omc/
+.worktrees/
+CLAUDE.local.md

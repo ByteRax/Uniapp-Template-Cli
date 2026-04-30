@@ -28,6 +28,7 @@
       "@uni-helper/vite-plugin-uni-pages",
       "miniprogram-api-typings",
       "wot-design-uni/global",
+      "@uni-ku/bundle-optimizer/client",
       "z-paging/types",
       "./src/types/async-component.d.ts",
       "./src/types/async-import.d.ts"
@@ -73,5 +74,5 @@
     "vite-plugins/**/*.ts",
     "uno-color-mapping.ts"
   ], // 指定需要包含在编译中的文件
-  "exclude": ["node_modules", "unpackage", "dist"] // 指定需要从编译中排除的文件
+  "exclude": ["node_modules", "unpackage", "dist", "src/types/components.d.ts"] // 指定需要从编译中排除的文件
 }

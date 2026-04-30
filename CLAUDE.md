@@ -19,16 +19,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```bash
 pnpm install
-pnpm dev:h5
-pnpm dev:mp-weixin
-pnpm dev:app
+pnpm dev:h5          # 自动清理端口 → type-check → 启动 H5 开发服务
+pnpm dev:mp-weixin   # 自动 type-check → 启动微信小程序开发服务
+pnpm dev:app         # 自动 type-check → 启动 App 开发服务
 pnpm build:h5
 pnpm build:mp-weixin
-pnpm type-check
+pnpm type-check      # 使用 tsconfig.typecheck.json（放宽 noUncheckedIndexedAccess/noPropertyAccessFromIndexSignature）
 pnpm lint
 pnpm lint:fix
 pnpm format
 pnpm format:check
+pnpm port:free       # 强制清理 VITE_APP_PORT 端口占用
 pnpm uvm
 ```
 
@@ -36,6 +37,9 @@ pnpm uvm
 
 - 当前仓库没有 `pnpm test` 脚本，也没有单文件/单测运行脚本。
 - 目前可用的质量检查主要是 `pnpm type-check`、`pnpm lint`、`pnpm format:check`。
+- `dev:*` 脚本已前置 `pnpm type-check`，开发时会尽早发现类型错误。
+- `type-check` 使用 `tsconfig.typecheck.json`，关闭 `noUncheckedIndexedAccess` 和 `noPropertyAccessFromIndexSignature` 以加速检查（CI 场景可切回 `vue-tsc --noEmit` 做全量检查）。
+- H5 系列 `dev:*` 脚本额外前置 `pnpm run port:free`，自动清理端口占用。
 
 ### Git 钩子
 
@@ -63,6 +67,9 @@ pnpm uvm
   - UnoCSS
   - 分包优化与异步跨包能力
   - H5 代理、构建压缩、图片优化、chunk 拆分、版本注入
+  - `strictPort: true`（端口占用直接报错）
+  - `experimentalMinChunkSize: 10000`（gzip 友好 chunk 分割）
+  - `build.target: 'esnext'`
 - 以下文件是生成产物，不要手动修改：
   - `src/pages.json`
   - `src/manifest.json`
@@ -98,6 +105,7 @@ pnpm uvm
   - `meta.originalData` 为 `true` 时直接返回原始响应数据
   - `meta.toast` 为 `true` 时自动弹出错误提示
 - API 方法放在 `src/api/`，接口类型放在 `src/api/types/`。
+- `src/http/tools/queryString.ts` 提供 URL 参数序列化辅助。
 
 ### 状态管理
 
@@ -107,8 +115,9 @@ pnpm uvm
   - 维护 token 过期时间
   - 封装登录、微信登录、登出和有效 token 获取逻辑
   - 登录成功后会拉取用户信息
-- `src/stores/theme.ts` 维护系统主题与主题变量，且已启用持久化。
-- 该项目中部分“composables”实际上是 Pinia store 或依赖 auto-import 的全局能力，改动前先确认职责，不要只按文件夹名判断。
+- `src/stores/user.ts`（`useUserStore`）管理用户资料与登录后信息拉取。
+- `src/stores/theme.ts`（`useThemeStore`）维护系统主题与主题变量，且已启用持久化。
+- 该项目中部分”composables”实际上是 Pinia store 或依赖 auto-import 的全局能力，改动前先确认职责，不要只按文件夹名判断。
 
 ### UI、样式与自动导入
 
@@ -123,7 +132,7 @@ pnpm uvm
   - `wot-design-uni` 的常用 hooks
   - `src/composables/**`
   - `src/stores/**`
-  - `src/utils/**`
+  - `src/utils/**`（含 `to`、`env`、`check`、`cookie` 等工具，均可直接使用）
   - `src/hooks/**`
   - `src/router/**`
 - 路径别名：`@`、`@img`、`@components`、`@layout`、`@utils`。

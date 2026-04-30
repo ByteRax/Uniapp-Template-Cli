@@ -107,7 +107,7 @@ pnpm build:mp-weixin     # 微信小程序生产构建
 ### 代码规范
 
 - ESLint 配置在 `eslint.config.mjs`
-- 格式化使用 Prettier,配置已集成
+- 格式化使用 oxfmt (Rust 实现),配置已集成
 - 提交前自动检查 (Husky + Lint-staged)
 
 ## 技术栈依赖
@@ -158,11 +158,14 @@ pnpm build:mp-weixin     # 微信小程序生产构建
 
 ## 开发命令
 
-- `pnpm dev` - 开发 H5 版本
-- `pnpm dev:mp` - 开发微信小程序
+- `pnpm dev:h5` - 开发 H5 版本（自动清理端口 + 类型检查）
+- `pnpm dev:mp-weixin` - 开发微信小程序（自动类型检查）
 - `pnpm dev:mp-alipay` - 开发支付宝小程序(含钉钉)
 - `pnpm dev:app` - 开发 APP 版本
-- `pnpm build` - 构建生产版本
+- `pnpm build:h5` - 构建 H5 生产版本
+- `pnpm type-check` - 类型检查
+- `pnpm lint` - 代码检查
+- `pnpm port:free` - 强制清理端口占用
 
 ## Vue 组件规范
 
