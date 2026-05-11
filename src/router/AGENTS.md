@@ -39,7 +39,7 @@
 ## Dependencies
 
 ### Internal
-- 依赖生成后的 `src/pages.json`、`src/stores/useToken.ts` 与登录页面路径常量。
+- 依赖生成后的 `src/pages.json`、`src/stores/userStore.ts` 与登录页面路径常量。
 
 ### External
 - `@dcloudio/uni-app` 的页面栈与导航 API。

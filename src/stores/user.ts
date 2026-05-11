@@ -7,14 +7,16 @@ const initState: IUserInfoRes = {
   avatar: '',
   nickname: '',
   userId: 0,
-  username: ''
+  name: ''
 }
 
 export const useUserStore = defineStore(
   'user',
-  // Setup Store 写法，Vue3 推荐用这个种方法写
   () => {
-    const userInfo = ref<IUserInfoRes>({ ...initState })
+    const userInfo = ref<IUserInfoRes | null>(null)
+    const token = ref('')
+    const isLoggedIn = computed(() => !!token.value)
+    const userName = computed(() => userInfo.value?.name || '游客')
 
     // 设置用户信息 可设置部分信息（比如更新 token）
     const setUserInfo = (val?: IUserInfoRes): void => {
@@ -24,14 +26,16 @@ export const useUserStore = defineStore(
     }
 
     // 清除用户信息
-    const clearUserInfo = (): void => {
+    const logout = (): void => {
       userInfo.value = { ...initState }
+      token.value = ''
+      userInfo.value = null
     }
 
     /**
      * 获取用户信息
      */
-    const fetchUserInfo = async () => {
+    const login = async () => {
       const res = await getUserInfo()
       setUserInfo(res.data)
       return res
@@ -39,9 +43,9 @@ export const useUserStore = defineStore(
 
     return {
       userInfo,
-      fetchUserInfo,
+      login,
       setUserInfo,
-      clearUserInfo
+      logout
     }
   },
   {

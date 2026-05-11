@@ -1,0 +1,21 @@
+# 依赖与构建（最大黑洞）
+node_modules/
+dist/
+build/
+.next/
+__pycache__/
+# 锁文件/日志
+*.lock
+package-lock.json
+*.log
+# 版本控制/IDE
+.git/
+.idea/
+.vscode/
+# 资源/缓存
+*.png
+*.jpg
+*.svg
+*.ico
+.cache/
+coverage/

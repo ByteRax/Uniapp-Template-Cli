@@ -22,7 +22,7 @@ export interface ILoginForm {
  */
 export interface IUserInfoRes {
   userId: number
-  username: string
+  name: string
   nickname: string
   avatar?: string
   [key: string]: any // 允许其他扩展字段

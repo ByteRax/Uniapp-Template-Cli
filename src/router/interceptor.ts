@@ -1,9 +1,9 @@
 /**
  * 路由拦截，通常也是登录拦截
  */
-import { getAllPages, getLastPage, parseUrlToObj } from '@/router'
+import { getAllPages, getCurrentPage, parseUrl } from '@/router'
 import { HOME_PAGE, LOGIN_PAGE } from '@/router/router.ts'
-import { useToken } from '@/stores/useToken.ts'
+import { userStore } from '@/stores/userStore.ts'
 
 export const FG_LOG_ENABLE = false
 
@@ -19,7 +19,7 @@ export const navigateToInterceptor = {
     if (url === undefined) {
       return
     }
-    let { path, query: _query } = parseUrlToObj(url)
+    let { path, query: _query } = parseUrl(url)
     if (FG_LOG_ENABLE) console.log('\n\n路由拦截器:-------------------------------------')
     if (FG_LOG_ENABLE) console.log('路由拦截器 1: url->', url, ', query ->', query)
     const myQuery = { ..._query, ...query }
@@ -28,7 +28,7 @@ export const navigateToInterceptor = {
     if (FG_LOG_ENABLE) console.log('路由拦截器 3: myQuery ->', myQuery)
     // 处理相对路径
     if (!path?.startsWith('/')) {
-      const currentPath = getLastPage()?.route || ''
+      const currentPath = getCurrentPage()?.route || ''
       const normalizedCurrentPath = currentPath.startsWith('/') ? currentPath : `/${currentPath}`
       const baseDir = normalizedCurrentPath.substring(0, normalizedCurrentPath.lastIndexOf('/'))
       path = `${baseDir}/${path}`
@@ -39,7 +39,7 @@ export const navigateToInterceptor = {
       router.notFound()
       return false // 明确表示阻止原路由继续执行
     }
-    const tokenStore = useToken()
+    const tokenStore = userStore()
     if (FG_LOG_ENABLE) console.log('tokenStore.hasLogin:', tokenStore.hasLogin())
     // 不管黑白名单，登录了就直接去吧（但是当前不能是登录页）
     if (tokenStore.hasLogin()) {
