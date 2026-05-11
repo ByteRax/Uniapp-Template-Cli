@@ -1,5 +1,5 @@
 // services/platformService.ts
-import { isApp, isMp, isH5, isMpWeixin, isWechatOfficialH5, hasWeixinJSBridge } from '@/utils/platform'
+import { hasWeixinJSBridge, isApp, isH5, isMp, isMpWeixin, isWechatOfficialH5 } from '@/utils/platform'
 
 /**
  * 调用微信 API（自动适配不同环境）
@@ -9,7 +9,7 @@ export const callWechatAPI = async <T>(apiName: string, params: Record<string, a
   if (isMpWeixin) {
     return new Promise((resolve, reject) => {
       // oxlint-disable-next-line typescript/ban-ts-comment
-      // @ts-ignore
+      // @ts-ignore -- wx 在 uni-app 多端环境下由运行时注入
       wx[apiName]({
         ...params,
         success: resolve,
@@ -29,7 +29,7 @@ export const callWechatAPI = async <T>(apiName: string, params: Record<string, a
 
     return new Promise((resolve, reject) => {
       // oxlint-disable-next-line typescript/ban-ts-comment
-      // @ts-ignore
+      // @ts-ignore -- wx 在公众号 H5 场景下由微信环境注入
       wx[apiName]({
         ...params,
         success: resolve,

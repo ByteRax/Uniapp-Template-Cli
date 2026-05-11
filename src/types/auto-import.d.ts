@@ -293,6 +293,7 @@ declare module 'vue' {
     readonly isApp: UnwrapRef<typeof import('../utils/platform')['isApp']>
     readonly isArray: UnwrapRef<typeof import('../utils/object')['isArray']>
     readonly isEmpty: UnwrapRef<typeof import('../utils/object')['isEmpty']>
+    readonly isH5: UnwrapRef<typeof import('../utils/platform')['isH5']>
     readonly isHarmony: UnwrapRef<typeof import('../utils/platform')['isHarmony']>
     readonly isIOS: UnwrapRef<typeof import('../utils/platform')['isIOS']>
     readonly isInDevTools: UnwrapRef<typeof import('../utils/platform')['isInDevTools']>

@@ -67,7 +67,7 @@ export function fullyDecodeUrl(url: string): string {
  * 比如输入url: /pages/login/login?redirect=%2Fpages%2Fdemo%2Fbase%2Froute-interceptor
  * 输出: {path: /pages/login/login, query: {redirect: /pages/demo/base/route-interceptor}}
  */
-export const parseUrl = (url: string) => {
+export function parseUrl(url: string) {
   const [path, queryStr] = url.split('?')
 
   if (!queryStr) {

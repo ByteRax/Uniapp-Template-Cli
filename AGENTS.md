@@ -62,6 +62,6 @@
 - `vue` / `pinia` - 视图层与状态管理。
 - `wot-design-uni` / `z-paging` - UI 组件与列表能力。
 - `unocss` - 原子化样式系统。
-- `vite` / `vue-tsc` / `eslint` / `oxlint` / `oxfmt` - 构建与质量检查工具。
+- `vite` / `vue-tsc` / `eslint` / `prettier` - 构建与质量检查工具。
 
 <!-- MANUAL: Any manually added notes below this line are preserved on regeneration -->

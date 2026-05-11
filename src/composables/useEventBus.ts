@@ -1,6 +1,6 @@
-import { onUnmounted } from 'vue'
-import { EventNames, eventBus } from './eventBus/type'
 import type { EventCallback, EventName, UseEventBusReturn } from './eventBus/type'
+import { onUnmounted } from 'vue'
+import { eventBus, EventNames } from './eventBus/type'
 
 export function useEventBus(): UseEventBusReturn {
   // 存储当前组件注册的所有取消函数

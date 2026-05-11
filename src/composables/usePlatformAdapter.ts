@@ -1,5 +1,5 @@
 // composables/usePlatformAdapter.ts
-import { isApp, isMp, isH5, isMpWeixin, isMpAlipay, isWechatOfficialH5, isAlipayOfficialH5 } from '@/utils/platform'
+import { isAlipayOfficialH5, isApp, isH5, isMp, isMpAlipay, isMpWeixin, isWechatOfficialH5 } from '@/utils/platform'
 
 export const usePlatformAdapter = () => {
   /**

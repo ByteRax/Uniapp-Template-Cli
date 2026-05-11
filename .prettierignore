@@ -7,6 +7,13 @@ pnpm-workspace.yaml
 **/*.svg
 **/*.sh
 **/*.yaml
+src/pages.json
+src/manifest.json
+src/types/auto-import.d.ts
+src/types/components.d.ts
+src/types/uni-pages.d.ts
+src/types/async-import.d.ts
+src/types/async-component.d.ts
 
 # 构建输出
 /dist/*

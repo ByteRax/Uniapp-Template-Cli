@@ -80,6 +80,7 @@
     "isApp": true,
     "isArray": true,
     "isEmpty": true,
+    "isH5": true,
     "isHarmony": true,
     "isIOS": true,
     "isInDevTools": true,

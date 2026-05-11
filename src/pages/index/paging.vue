@@ -1,8 +1,7 @@
 <script lang="ts" setup>
 definePage({
-  type: 'home',
   style: {
-    navigationBarTitleText: '我是首页'
+    navigationBarTitleText: '下拉刷新上拉加载框架'
   },
   needLogin: true
 })
@@ -32,8 +31,8 @@ onMounted(() => {
   <base-layout ref="page">
     <z-paging
       ref="paging"
-      cell-height-mode="dynamic"
       :force-close-inner-list="true"
+      cell-height-mode="dynamic"
       use-virtual-list
       @query="queryList"
       @virtual-list-change="(vList: ZPagingVirtualItem<{ title: string }>[]) => (dataList = vList)"

@@ -2,14 +2,14 @@
  * 平台类型
  */
 export type PlatformType = 'app' | 'mp-weixin' | 'mp-alipay' | 'mp-toutiao' | 'mp-baidu' | 'mp-qq' | 'h5' | 'quickapp-webview' | ''
-export const platform = __UNI_PLATFORM__ //当前平台标识字符串
+export const platform = __UNI_PLATFORM__ // 当前平台标识字符串
 const isH5Platform = __UNI_PLATFORM__ === 'h5'
-export const isApp = __UNI_PLATFORM__ === 'app' //是否 App 平台
-export const isMp = __UNI_PLATFORM__.startsWith('mp-') //是否小程序平台
-export const isMpWeixin = __UNI_PLATFORM__.startsWith('mp-weixin') //是否微信小程序
-export const isMpAlipay = __UNI_PLATFORM__.startsWith('mp-alipay') //是否支付宝小程序
-export const isMpToutiao = __UNI_PLATFORM__.startsWith('mp-toutiao') //是否头条/抖音小程序
-export const isHarmony = __UNI_PLATFORM__.startsWith('app-harmony') //是否是鸿蒙系统
+export const isApp = __UNI_PLATFORM__ === 'app' // 是否 App 平台
+export const isMp = __UNI_PLATFORM__.startsWith('mp-') // 是否小程序平台
+export const isMpWeixin = __UNI_PLATFORM__.startsWith('mp-weixin') // 是否微信小程序
+export const isMpAlipay = __UNI_PLATFORM__.startsWith('mp-alipay') // 是否支付宝小程序
+export const isMpToutiao = __UNI_PLATFORM__.startsWith('mp-toutiao') // 是否头条/抖音小程序
+export const isHarmony = __UNI_PLATFORM__.startsWith('app-harmony') // 是否是鸿蒙系统
 /**
  * 安全的 User Agent 检测 - 兼容所有平台
  */
@@ -46,7 +46,7 @@ export const isAlipayOfficialH5 = (() => {
 })()
 
 // 普通H5 (排除在微信、支付宝等容器内的H5)
-const isH5 = __UNI_PLATFORM__ === 'h5' && !isWechatOfficialH5 && !isAlipayOfficialH5
+export const isH5 = __UNI_PLATFORM__ === 'h5' && !isWechatOfficialH5 && !isAlipayOfficialH5
 
 // 检测特定浏览器
 const ua = safeGetUserAgent()
@@ -62,11 +62,11 @@ const isMobileUA = /mobile|android|iphone|ipad|ipod/.test(ua)
 
 /**
  * 检查是否在微信环境中
- * 微信小程序	isMpWeixin === true	true
- * 微信公众号H5	UA 含 micromessenger	true
- * 微信内置浏览器	UA 含 micromessenger	true
- * App 内嵌微信	需要额外配置	false
- * 其他环境	-	false
+ * 微信小程序 isMpWeixin === true true
+ * 微信公众号H5 UA 含 micromessenger true
+ * 微信内置浏览器 UA 含 micromessenger true
+ * App 内嵌微信 需要额外配置 false
+ * 其他环境 - false
  */
 export const isWechatEnvironment = (): boolean => {
   // 微信小程序
@@ -116,7 +116,7 @@ export const hasWeixinJSBridge = (): boolean => {
 
   try {
     // oxlint-disable-next-line typescript/ban-ts-comment
-    // @ts-ignore
+    // @ts-ignore -- WeixinJSBridge 由微信容器在运行时注入到 window
     return typeof window !== 'undefined' && typeof window['WeixinJSBridge'] !== 'undefined'
   } catch (error) {
     return false
@@ -180,15 +180,6 @@ export const isMobileDevice = (): boolean => {
 /**
  * 获取设备类型
  */
-export const getDeviceType = (): 'mobile' | 'tablet' | 'desktop' => {
-  if (isTabletDevice()) return 'tablet'
-  if (isMobileDevice()) return 'mobile'
-  return 'desktop'
-}
-
-/**
- * 判断是否是平板设备
- */
 export const isTabletDevice = (): boolean => {
   if (!isH5) {
     const systemInfo = uni.getSystemInfoSync()
@@ -198,6 +189,15 @@ export const isTabletDevice = (): boolean => {
 
   const ua = navigator.userAgent.toLowerCase()
   return /ipad|android(?!.*mobile)/.test(ua)
+}
+
+/**
+ * 获取设备类型
+ */
+export const getDeviceType = (): 'mobile' | 'tablet' | 'desktop' => {
+  if (isTabletDevice()) return 'tablet'
+  if (isMobileDevice()) return 'mobile'
+  return 'desktop'
 }
 
 /**

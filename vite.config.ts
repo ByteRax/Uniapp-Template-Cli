@@ -220,8 +220,8 @@ export default async ({ mode }: ConfigEnv) => {
           : undefined,
       // 预热文件以降低启动期间的初始页面加载时长
       warmup: {
-        // 预热的客户端文件：首页、views、 components
-        clientFiles: ['./index.html', './src/{views,components,layout}/*']
+        // 预热入口和源码文件，避免把 AGENTS.md 等文档交给 Vite 当作模块解析
+        clientFiles: ['./index.html', './src/{views,components,layout}/**/*.{vue,ts,js}']
       }
     },
     esbuild: {
@@ -292,7 +292,7 @@ export default async ({ mode }: ConfigEnv) => {
       server: {
         // H5 启用 HTTP/2 推送
         headers: {
-          'Link': '</assets/main.js>; rel=preload; as=script'
+          Link: '</assets/main.js>; rel=preload; as=script'
         }
       }
     }
