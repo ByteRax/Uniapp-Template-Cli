@@ -6,36 +6,70 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - 默认使用简体中文回复。
 - 回复用户时称呼用户为“爸爸”。
-- 开始任何工作前，先查看 `.claude/tasks/context_session_{x}.md` 获取当前会话上下文；如果不存在则创建。
-- 完成工作后，更新对应的 `.claude/tasks/context_session_{x}.md`，记录已完成内容和关键结论。
+- 开始修改前先阅读相关现有文件；不要直接覆盖整文件，优先小范围编辑。
+- 不要手动修改生成产物：`src/pages.json`、`src/manifest.json`、`src/types/auto-import.d.ts`、`src/types/components.d.ts`、`src/types/uni-pages.d.ts`、`src/types/async-import.d.ts`、`src/types/async-component.d.ts`。
+- `dist/`、`.omc/`、IDE 配置和历史 AI 笔记只作为参考或产物，不作为源码事实来源。
 
 ## 环境与命令
 
 - Node.js `>= 22`
-- pnpm `>= 10.12.4`
+- pnpm `>= 10.12.4`，当前 `packageManager` 为 `pnpm@10.25.0`
 - 环境变量统一放在 `env/`，不是项目根目录。
 
 ### 常用命令
 
 ```bash
 pnpm install
+pnpm uvm
 pnpm dev:h5
+pnpm dev:h5:production
+pnpm dev:h5:ssr
 pnpm dev:mp-weixin
+pnpm dev:mp-weixin:production
 pnpm dev:app
+pnpm dev:app:test
+pnpm dev:app:prod
+pnpm dev:app-android
+pnpm dev:app-ios
+pnpm dev:mp-alipay
+pnpm dev:mp-baidu
+pnpm dev:mp-jd
+pnpm dev:mp-kuaishou
+pnpm dev:mp-lark
+pnpm dev:mp-qq
+pnpm dev:mp-toutiao
+pnpm dev:mp-harmony
+pnpm dev:mp-xhs
+pnpm dev:quickapp-webview
 pnpm build:h5
+pnpm build:h5:ssr
 pnpm build:mp-weixin
+pnpm build:mp-weixin:production
+pnpm build:mp-alipay
+pnpm build:mp-baidu
+pnpm build:mp-jd
+pnpm build:mp-kuaishou
+pnpm build:mp-lark
+pnpm build:mp-qq
+pnpm build:mp-toutiao
+pnpm build:mp-harmony
+pnpm build:mp-xhs
+pnpm build:quickapp-webview
+pnpm upload:mp
 pnpm type-check
 pnpm lint
 pnpm lint:fix
 pnpm format
 pnpm format:check
-pnpm uvm
 ```
+
+还有 `dev:custom` / `build:custom` 可通过 `uni -p` 或 `uni build -p` 指定平台。脚本名称以 `package.json` 为准，README 中旧的 `pnpm dev`、`pnpm dev:mp`、`pnpm build:mp` 不再作为依据。
 
 ### 关于测试
 
 - 当前仓库没有 `pnpm test` 脚本，也没有单文件/单测运行脚本。
 - 目前可用的质量检查主要是 `pnpm type-check`、`pnpm lint`、`pnpm format:check`。
+- 文档-only 改动通常不需要构建，但需要核对文档中的命令、路径和生成产物说明与当前仓库一致。
 
 ### Git 钩子
 
@@ -47,6 +81,7 @@ pnpm uvm
 ### 应用启动链路
 
 - `src/main.ts` 是应用入口：创建 `App.vue` 后依次执行 `setupStore()`、`setupRoute()`、`setupHttp()`。
+- `src/main.ts` 还配置了 `uni.$zp.config`，作为 `z-paging` 的全局默认分页、空态和安全区设置。
 - `src/stores/index.ts` 创建 Pinia，并通过 `setActivePinia(store)` 在 `app.use(store)` 前提前激活，避免 App 端白屏问题。
 - Pinia 持久化使用 `pinia-plugin-persistedstate`，底层存储直接映射到 `uni.getStorageSync` / `uni.setStorageSync`。
 
@@ -59,6 +94,7 @@ pnpm uvm
   - `envDir: './env'`
   - Uni 页面/manifest 插件
   - Wot Design Uni 组件自动解析
+  - `UniKuRoot` 根视图与分包优化
   - Vue / Pinia / uni-app / 项目内模块自动导入
   - UnoCSS
   - 分包优化与异步跨包能力
@@ -76,6 +112,7 @@ pnpm uvm
 
 - 主包页面位于 `src/pages/`，分包页面位于 `src/pages-sub/`。
 - `vite.config.ts` 通过 `subPackages: ['src/pages-sub']` 声明分包。
+- `pages.config.ts` 只维护全局页面配置、easycom 和预加载规则；具体页面通常通过 `.vue` 内的 `<route lang="json">` 块进入生成流程。
 - 路由运行时的真实来源是生成后的 `src/pages.json`；`src/router/index.ts` 会读取其中的 `pages` / `subPackages` 并提供页面查询工具。
 - `src/router/interceptor.ts` 是路由守卫核心：
   - 解析跳转 URL
@@ -98,6 +135,7 @@ pnpm uvm
   - `meta.originalData` 为 `true` 时直接返回原始响应数据
   - `meta.toast` 为 `true` 时自动弹出错误提示
 - API 方法放在 `src/api/`，接口类型放在 `src/api/types/`。
+- `src/services/platformService.ts` 放跨端服务能力，当前封装微信 API 调用适配和地图导航；H5 分支会触达 `window` / `document`，改动时注意端侧限定。
 
 ### 状态管理
 
@@ -109,10 +147,12 @@ pnpm uvm
   - 登录成功后会拉取用户信息
 - `src/stores/theme.ts` 维护系统主题与主题变量，且已启用持久化。
 - 该项目中部分“composables”实际上是 Pinia store 或依赖 auto-import 的全局能力，改动前先确认职责，不要只按文件夹名判断。
+- `src/composables/` 已包含剪贴板、倒计时、防抖节流、事件总线、媒体查询、支付、平台适配、滚动、主题和全局 UI 状态等能力。
 
 ### UI、样式与自动导入
 
 - UnoCSS 配置在 `uno.config.ts`，暗色主题映射在 `uno-color-mapping.ts`。
+- UnoCSS 使用 `presetUni`、`presetIcons`、`transformerDirectives`、`transformerVariantGroup` 和 `transformerCompileClass`；`size-*`、`p-safe`、`pt-safe`、`pb-safe` 与暗色颜色规则是本地扩展。
 - `pages.config.ts` 中配置了：
   - `wd-*` → Wot Design Uni 组件
   - `z-paging*` → z-paging 组件
@@ -120,13 +160,21 @@ pnpm uvm
   - Vue API
   - Pinia API
   - uni-app API
-  - `wot-design-uni` 的常用 hooks
+  - `@wot-ui/ui` / Wot UI V2 的常用 hooks
   - `src/composables/**`
   - `src/stores/**`
   - `src/utils/**`
   - `src/hooks/**`
   - `src/router/**`
 - 路径别名：`@`、`@img`、`@components`、`@layout`、`@utils`。
+- `UniComponents` 当前扫描 `src/components` 和 `src/layout`，但实际布局组件主要在 `src/components/layout`；新增目录前先核对扫描配置。
+
+### 代码风格与质量工具
+
+- ESLint 使用 `eslint.config.mjs` 的 flat config，基础来自 `@uni-helper/eslint-config`，并追加 `@unocss/eslint-plugin`。
+- Vue SFC 要使用 `<script setup>`，块顺序为 `script`、`template`、`style`。
+- TS 严格模式开启，`verbatimModuleSyntax` 开启，类型导入应使用 `import type`。
+- Prettier 负责格式化检查，ESLint 中多项 style / stylistic 规则已关闭以避免与格式化工具冲突；提交前仍以 `pnpm lint` 和 `pnpm format:check` 为准。
 
 ### 多端开发注意点
 

@@ -1,9 +1,9 @@
-import type { MessageOptions, MessageResult } from 'wot-design-uni/components/wd-message-box/types'
+import type { DialogOptions, DialogResult } from '@wot-ui/ui/components/wd-dialog/types'
 import { defineStore } from 'pinia'
 
-export type GlobalMessageOptions = MessageOptions & {
-  success?: (res: MessageResult) => void
-  fail?: (res: MessageResult) => void
+export type GlobalMessageOptions = DialogOptions & {
+  success?: (res: DialogResult) => void
+  fail?: (res: DialogResult) => void
 }
 
 interface GlobalMessage {
@@ -30,17 +30,17 @@ export const useGlobalMessage = defineStore('global-message', {
       }
     },
     alert(option: GlobalMessageOptions | string) {
-      const messageOptions = CommonUtil.deepMerge({ type: 'alert' }, CommonUtil.isString(option) ? { title: option } : option) as MessageOptions
+      const messageOptions = CommonUtil.deepMerge({ type: 'alert' }, CommonUtil.isString(option) ? { title: option } : option) as DialogOptions
       messageOptions.showCancelButton = false
       this.show(messageOptions)
     },
     confirm(option: GlobalMessageOptions | string) {
-      const messageOptions = CommonUtil.deepMerge({ type: 'confirm' }, CommonUtil.isString(option) ? { title: option } : option) as MessageOptions
+      const messageOptions = CommonUtil.deepMerge({ type: 'confirm' }, CommonUtil.isString(option) ? { title: option } : option) as DialogOptions
       messageOptions.showCancelButton = true
       this.show(messageOptions)
     },
     prompt(option: GlobalMessageOptions | string) {
-      const messageOptions = CommonUtil.deepMerge({ type: 'prompt' }, CommonUtil.isString(option) ? { title: option } : option) as MessageOptions
+      const messageOptions = CommonUtil.deepMerge({ type: 'prompt' }, CommonUtil.isString(option) ? { title: option } : option) as DialogOptions
       messageOptions.showCancelButton = true
       this.show(messageOptions)
     },

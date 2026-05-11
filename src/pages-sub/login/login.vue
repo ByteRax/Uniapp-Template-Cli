@@ -1,7 +1,9 @@
 <script lang="ts" setup>
+import { ensureDecodeURIComponent, parseUrlToObj } from '@/router'
+import { userStore } from '@/stores/userStore'
 import { generateUUID } from '@/utils'
 
-const tokenStore = useToken()
+const tokenStore = userStore()
 definePage({
   style: {
     navigationBarTitleText: '登录'
@@ -11,8 +13,8 @@ definePage({
 const redirectUrl = ref('')
 onLoad((options) => {
   console.log('login options: ', options)
-  if (options?.redirect) {
-    redirectUrl.value = ensureDecodeURIComponent(options.redirect)
+  if (options?.['redirect']) {
+    redirectUrl.value = ensureDecodeURIComponent(options['redirect'])
   }
   console.log('redirectUrl.value: ', redirectUrl.value)
 })

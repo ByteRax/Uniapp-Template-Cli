@@ -6,7 +6,6 @@ export const debounce = <T extends (...args: any[]) => any>(func: T, wait: numbe
   let timeout: ReturnType<typeof setTimeout> | null = null
 
   const debounced = function (this: any, ...args: Parameters<T>) {
-    // oxlint-disable-next-line typescript/no-this-alias
     // eslint-disable-next-line ts/no-this-alias -- 防抖的延迟回调需要保留调用时的 this
     const context = this
     const callNow = immediate && !timeout
@@ -46,7 +45,6 @@ export const throttle = <T extends (...args: any[]) => any>(func: T, wait: numbe
 
   const throttled = function (this: any, ...currentArgs: Parameters<T>) {
     const now = Date.now()
-    // oxlint-disable-next-line typescript/no-this-alias
     // eslint-disable-next-line ts/no-this-alias -- 节流的尾调用需要复用触发时的 this
     context = this
     args = currentArgs
@@ -67,7 +65,6 @@ export const throttle = <T extends (...args: any[]) => any>(func: T, wait: numbe
       timeout = setTimeout(() => {
         previous = leading ? Date.now() : 0
         timeout = null
-        // oxlint-disable-next-line typescript/ban-ts-comment
         // @ts-ignore -- 已通过运行时保证 args 非空，这里为了兼容泛型签名
         func.apply(context, args)
         context = args = null

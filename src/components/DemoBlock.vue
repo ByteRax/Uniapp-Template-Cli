@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-interface Props {
+export interface Props {
   /** 标题 */
   title?: string
   /** 自定义类名 */

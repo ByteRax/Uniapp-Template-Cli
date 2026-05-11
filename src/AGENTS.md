@@ -69,6 +69,6 @@
 - `vue` - 应用组件与组合式 API。
 - `pinia` / `pinia-plugin-persistedstate` - 状态管理与持久化。
 - `@dcloudio/uni-app` - 多端运行时 API。
-- `wot-design-uni` / `z-paging` - UI 组件能力。
+- `@wot-ui/ui` / Wot UI V2 / `z-paging` - UI 组件能力。
 
 <!-- MANUAL: Any manually added notes below this line are preserved on regeneration -->

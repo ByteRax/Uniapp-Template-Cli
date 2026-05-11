@@ -13,14 +13,5 @@ declare module 'vue' {
     GlobalMessage: typeof import('./../components/common/GlobalMessage.vue')['default']
     GlobalToast: typeof import('./../components/common/GlobalToast.vue')['default']
     PrivacyPopup: typeof import('./../components/business/PrivacyPopup.vue')['default']
-    WdButton: typeof import('wot-design-uni/components/wd-button/wd-button.vue')['default']
-    WdCell: typeof import('wot-design-uni/components/wd-cell/wd-cell.vue')['default']
-    WdCellGroup: typeof import('wot-design-uni/components/wd-cell-group/wd-cell-group.vue')['default']
-    WdConfigProvider: typeof import('wot-design-uni/components/wd-config-provider/wd-config-provider.vue')['default']
-    WdIcon: typeof import('wot-design-uni/components/wd-icon/wd-icon.vue')['default']
-    WdLoading: typeof import('wot-design-uni/components/wd-loading/wd-loading.vue')['default']
-    WdMessageBox: typeof import('wot-design-uni/components/wd-message-box/wd-message-box.vue')['default']
-    WdPopup: typeof import('wot-design-uni/components/wd-popup/wd-popup.vue')['default']
-    WdToast: typeof import('wot-design-uni/components/wd-toast/wd-toast.vue')['default']
   }
 }

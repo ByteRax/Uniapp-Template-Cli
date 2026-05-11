@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { onBeforeMount, ref } from 'vue'
 
-interface Props {
+export interface Props {
   title?: string // 标题
   desc?: string // 描述
   subDesc?: string // 字描述
@@ -113,9 +113,7 @@ export default {
       </view>
       <view class="wd-privacy-popup__footer">
         <button id="disagree-btn" class="is-block is-round is-medium is-plain wd-privacy-popup__footer-disagree wd-button" @click="handleDisagree">拒绝</button>
-        <button id="agree-btn" class="wd-button is-block is-round is-medium is-primary wd-privacy-popup__footer-agree" open-type="agreePrivacyAuthorization" @agreeprivacyauthorization="handleAgree">
-          同意
-        </button>
+        <button id="agree-btn" class="wd-button is-block is-round is-medium is-primary wd-privacy-popup__footer-agree" open-type="agreePrivacyAuthorization" @agreeprivacyauthorization="handleAgree">同意</button>
       </view>
     </wd-popup>
   </view>

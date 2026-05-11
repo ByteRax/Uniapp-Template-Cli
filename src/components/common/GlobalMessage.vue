@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import { deepClone, isFunction } from 'wot-design-uni/components/common/util'
+import { deepClone, isFunction } from '@wot-ui/ui/common/util'
 
 const { messageOptions, currentPage } = storeToRefs(useGlobalMessage())
 
-const messageBox = useMessage('globalMessage')
+const messageBox = useDialog('globalMessage')
 const currentPath = getCurrentPath()
 
 // #ifdef MP-ALIPAY
@@ -52,9 +52,9 @@ export default {
 
 <template>
   <!-- #ifdef MP-ALIPAY -->
-  <wd-message-box v-if="hackAlipayVisible" selector="globalMessage" />
+  <wd-dialog v-if="hackAlipayVisible" selector="globalMessage" />
   <!-- #endif -->
   <!-- #ifndef MP-ALIPAY -->
-  <wd-message-box selector="globalMessage" />
+  <wd-dialog selector="globalMessage" />
   <!-- #endif -->
 </template>

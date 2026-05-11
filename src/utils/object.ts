@@ -1,5 +1,5 @@
 import type { CommonAllType } from '@/utils/type.ts'
-import { deepClone as _deepClone } from 'wot-design-uni/components/common/util'
+import { deepClone as _deepClone } from '@wot-ui/ui/common/util'
 
 /**
  * 判断一个值是否是对象
