@@ -115,7 +115,6 @@ export const hasWeixinJSBridge = (): boolean => {
   }
 
   try {
-    // oxlint-disable-next-line typescript/ban-ts-comment
     // @ts-ignore -- WeixinJSBridge 由微信容器在运行时注入到 window
     return typeof window !== 'undefined' && typeof window['WeixinJSBridge'] !== 'undefined'
   } catch (error) {

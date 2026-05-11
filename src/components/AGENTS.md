@@ -51,6 +51,6 @@
 
 ### External
 - `vue` 组件系统。
-- `wot-design-uni`、`z-paging` 等 UI 组件库。
+- `@wot-ui/ui` / Wot UI V2、`z-paging` 等 UI 组件库。
 
 <!-- MANUAL: Any manually added notes below this line are preserved on regeneration -->

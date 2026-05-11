@@ -19,6 +19,8 @@ export const getCurrentPage = () => {
   return pages[pages.length - 1]
 }
 
+export const getLastPage = getCurrentPage
+
 /**
  * 获取当前页面路径
  * @returns 当前页面路径
@@ -62,6 +64,8 @@ export function fullyDecodeUrl(url: string): string {
   return url
 }
 
+export const ensureDecodeURIComponent = fullyDecodeUrl
+
 /**
  * 解析 url 得到 path 和 query
  * 比如输入url: /pages/login/login?redirect=%2Fpages%2Fdemo%2Fbase%2Froute-interceptor
@@ -82,6 +86,8 @@ export function parseUrl(url: string) {
   })
   return { path, query }
 }
+
+export const parseUrlToObj = parseUrl
 
 /**
  * 得到所有的需要登录的 pages，包括主包和分包的

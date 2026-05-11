@@ -1,4 +1,4 @@
-import type { ToastOptions } from 'wot-design-uni/components/wd-toast/types'
+import type { ToastOptions } from '@wot-ui/ui/components/wd-toast/types'
 
 import { defineStore } from 'pinia'
 
@@ -23,7 +23,7 @@ export const useGlobalLoading = defineStore('global-loading', {
       this.loadingOptions = CommonUtil.deepMerge(
         {
           iconName: 'loading',
-          loadingType: 'ring',
+          loadingType: 'circular',
           loadingColor: '#777777',
           duration: 0,
           cover: true,

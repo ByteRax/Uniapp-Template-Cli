@@ -47,7 +47,7 @@ export const userStore = defineStore(
         setTokenInfo(tokenInfo.data)
       }
       const userStore = useUserStore()
-      await userStore.fetchUserInfo()
+      await userStore.login()
     }
 
     /**
@@ -120,7 +120,7 @@ export const userStore = defineStore(
         tokenInfo.value = { ...tokenInfoState }
         uni.removeStorageSync('token')
         const userStore = useUserStore()
-        userStore.clearUserInfo()
+        userStore.logout()
       }
     }
     /**

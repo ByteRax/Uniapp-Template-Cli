@@ -8,7 +8,6 @@ export const callWechatAPI = async <T>(apiName: string, params: Record<string, a
   // 微信小程序
   if (isMpWeixin) {
     return new Promise((resolve, reject) => {
-      // oxlint-disable-next-line typescript/ban-ts-comment
       // @ts-ignore -- wx 在 uni-app 多端环境下由运行时注入
       wx[apiName]({
         ...params,
@@ -28,7 +27,6 @@ export const callWechatAPI = async <T>(apiName: string, params: Record<string, a
     }
 
     return new Promise((resolve, reject) => {
-      // oxlint-disable-next-line typescript/ban-ts-comment
       // @ts-ignore -- wx 在公众号 H5 场景下由微信环境注入
       wx[apiName]({
         ...params,

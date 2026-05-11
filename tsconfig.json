@@ -19,26 +19,14 @@
       "@/*": ["./src/*"]
     },
     "resolveJsonModule": true, // 允许导入 .json 文件
-    "types": [
-      "node",
-      "@types/node",
-      "@dcloudio/types",
-      "@uni-helper/uni-types",
-      "@uni-helper/uni-app-types",
-      "@uni-helper/vite-plugin-uni-pages",
-      "miniprogram-api-typings",
-      "wot-design-uni/global",
-      "z-paging/types",
-      "./src/types/async-component.d.ts",
-      "./src/types/async-import.d.ts"
-    ], // 指定需要包含的类型声明文件包
+    "types": ["node", "@types/node", "@dcloudio/types", "@uni-helper/uni-types", "@uni-helper/uni-app-types", "@uni-helper/vite-plugin-uni-pages", "miniprogram-api-typings", "z-paging/types", "./src/types/async-component.d.ts", "./src/types/async-import.d.ts"], // 指定需要包含的类型声明文件包
     "allowImportingTsExtensions": true, // 允许导入带 .ts 或 .tsx 扩展名的文件
     "strict": true, // 启用所有严格类型检查选项
     "noFallthroughCasesInSwitch": true, // 禁止 switch 语句中的 case 穿透
     "noImplicitOverride": true, // 强制派生类中的重写方法必须使用 override 关键字
     "noImplicitReturns": true, // 检查函数所有分支是否都有返回值
-    "noPropertyAccessFromIndexSignature": true, // 禁止通过点语法(.)访问通过索引签名定义的属性
-    "noUncheckedIndexedAccess": true, // 对索引访问的结果添加 '| undefined' 类型，增加类型安全性
+    "noPropertyAccessFromIndexSignature": false, // 允许第三方组件库中通过点语法访问索引签名
+    "noUncheckedIndexedAccess": false, // 避免按项目严格索引规则检查第三方组件源码
     "noUnusedLocals": false, // 禁止出现未使用的局部变量（已禁用）
     "noUnusedParameters": false, // 禁止出现未使用的函数参数（已禁用）
     "removeComments": false, // 是否在编译后移除注释
@@ -55,23 +43,6 @@
     "target": 3, // 指定 Vue 的目标版本
     "plugins": ["@uni-helper/uni-types/volar-plugin"] // 为 Volar（Vue 的语言服务）配置插件
   },
-  "include": [
-    "package.json",
-    "src/**/*.ts",
-    "src/**/*.js",
-    "src/**/*.d.ts",
-    "src/**/*.tsx",
-    "src/**/*.jsx",
-    "src/**/*.vue",
-    "src/**/*.json",
-    "getEnv.ts",
-    "vite.config.ts",
-    "pages.config.ts",
-    "manifest.config.ts",
-    "uno.config.ts",
-    "vite-plugins/**/*.js",
-    "vite-plugins/**/*.ts",
-    "uno-color-mapping.ts"
-  ], // 指定需要包含在编译中的文件
+  "include": ["package.json", "src/**/*.ts", "src/**/*.js", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.jsx", "src/**/*.vue", "src/**/*.json", "getEnv.ts", "vite.config.ts", "pages.config.ts", "manifest.config.ts", "uno.config.ts", "vite-plugins/**/*.js", "vite-plugins/**/*.ts", "uno-color-mapping.ts"], // 指定需要包含在编译中的文件
   "exclude": ["node_modules", "unpackage", "dist"] // 指定需要从编译中排除的文件
 }

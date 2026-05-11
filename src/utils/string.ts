@@ -1,4 +1,4 @@
-import { buildUrlWithParams as _buildUrlWithParams } from 'wot-design-uni/components/common/util'
+import { buildUrlWithParams as _buildUrlWithParams } from '@wot-ui/ui/common/util'
 
 // /**
 //  * 获取字符串的字素长度（grapheme length）

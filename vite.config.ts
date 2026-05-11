@@ -6,7 +6,6 @@ import * as process from 'node:process'
 import CompressJson from '@binbinji/unplugin-compress-json/vite'
 import Uni from '@uni-helper/plugin-uni'
 import UniComponents from '@uni-helper/vite-plugin-uni-components'
-import { WotResolver } from '@uni-helper/vite-plugin-uni-components/resolvers'
 // @see https://github.com/uni-helper/vite-plugin-uni-manifest
 import UniHelperManifest from '@uni-helper/vite-plugin-uni-manifest'
 // @see https://uni-helper.js.org/vite-plugin-uni-pages
@@ -29,6 +28,26 @@ import { handlePageName } from './vite-plugins/vite-config-uni-pages'
 import openDevTools from './vite-plugins/vite-open-dev-tools'
 import { AutoVersion } from './vite-plugins/vite-plugin-auto-version'
 
+function kebabCase(value: string) {
+  return value.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase()
+}
+
+function WotUiResolver() {
+  return {
+    type: 'component' as const,
+    resolve: (name: string) => {
+      if (!name.match(/^Wd[A-Z]/)) {
+        return undefined
+      }
+      const compName = kebabCase(name)
+      return {
+        name,
+        from: `@wot-ui/ui/components/${compName}/${compName}.vue`
+      }
+    }
+  }
+}
+
 // https://vitejs.dev/config/
 export default async ({ mode }: ConfigEnv) => {
   const { UNI_PLATFORM, VITE_USER_NODE_ENV, SKIP_OPEN_DEVTOOLS } = process.env
@@ -41,7 +60,7 @@ export default async ({ mode }: ConfigEnv) => {
     envDir: './env', // 自定义env目录
     base: VITE_APP_PUBLIC_BASE,
     optimizeDeps: {
-      exclude: isBuild ? ['wot-design-uni'] : []
+      exclude: isBuild ? ['@wot-ui/ui'] : []
     },
 
     plugins: [
@@ -61,7 +80,7 @@ export default async ({ mode }: ConfigEnv) => {
       }),
       // Components 需要在 Uni 之前引入
       UniComponents({
-        resolvers: [WotResolver()],
+        resolvers: [WotUiResolver()],
         extensions: ['vue'],
         deep: true, // 是否递归扫描子目录，
         directoryAsNamespace: false, // 是否把目录名作为命名空间前缀，true 时组件名为 目录名+组件名，
@@ -91,7 +110,7 @@ export default async ({ mode }: ConfigEnv) => {
           'pinia',
           'uni-app',
           {
-            'wot-design-uni': ['useToast', 'useMessage', 'useNotify', 'CommonUtil'],
+            '@wot-ui/ui': ['useToast', 'useDialog', 'useNotify', 'CommonUtil'],
             'z-paging/types': ['zPaging', 'ZPagingVirtualItem']
           }
         ],
@@ -265,8 +284,8 @@ export default async ({ mode }: ConfigEnv) => {
                 if (id.includes('pinia')) {
                   return 'pinia-vendor'
                 }
-                if (id.includes('wot-design-uni')) {
-                  return 'wot-design-uni'
+                if (id.includes('@wot-ui/ui')) {
+                  return 'wot-ui'
                 }
                 if (id.includes('z-paging')) {
                   return 'z-paging'

@@ -1,4 +1,6 @@
-import type { ConfigProviderThemeVars } from 'wot-design-uni'
+import type { ConfigProviderThemeVars } from '@wot-ui/ui'
+
+export type AppConfigProviderThemeVars = ConfigProviderThemeVars & Record<string, string>
 
 /**
  * 主题色选项接口
@@ -22,7 +24,7 @@ export interface ThemeState {
   followSystem: boolean
   hasUserSet: boolean
   currentThemeColor: ThemeColorOption
-  themeVars: ConfigProviderThemeVars
+  themeVars: AppConfigProviderThemeVars
 }
 
 /**
@@ -30,7 +32,7 @@ export interface ThemeState {
  */
 export interface SystemThemeState {
   theme: ThemeMode
-  themeVars: ConfigProviderThemeVars
+  themeVars: AppConfigProviderThemeVars
 }
 
 /**

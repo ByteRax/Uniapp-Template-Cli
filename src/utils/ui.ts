@@ -1,4 +1,4 @@
-import type { ToastOptions } from 'wot-design-uni/components/wd-toast/types.ts'
+import type { ToastOptions } from '@wot-ui/ui/components/wd-toast/types'
 import { isShowLoadingOptions, isToastOptions } from '@/utils/is.ts'
 import { getValue } from '@/utils/object.ts'
 
