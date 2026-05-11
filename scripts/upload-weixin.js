@@ -14,7 +14,7 @@
  * 注意事项:
  *   1. 确保已在微信公众平台开通 "小程序代码上传" 权限
  *   2. 确保私钥文件存在（private.${appid}.key），并且配置了上传IP白名单
- *   3. 上传前会自动执行 build:mp:prod 构建 并跳过打开开发者工具
+ *   3. 上传前会自动执行 build:mp-weixin:production 构建并跳过打开开发者工具
  *   4. 秘钥文件的appid(VITE_WX_APPID)需要与微信公众平台的小程序appid一致
  */
 
@@ -28,6 +28,7 @@ import ci from 'miniprogram-ci'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const ROOT_DIR = path.resolve(__dirname, '..')
+const BUILD_COMMAND = 'pnpm build:mp-weixin:production'
 
 // 从 package.json 读取版本号
 function getPackageVersion() {
@@ -180,7 +181,7 @@ async function main() {
   // 构建小程序（跳过自动打开开发者工具）
   console.log('\n📦 正在构建小程序...（跳过自动打开开发者工具）\n')
   try {
-    execSync('pnpm build:mp:prod', {
+    execSync(BUILD_COMMAND, {
       cwd: ROOT_DIR,
       stdio: 'inherit',
       env: {

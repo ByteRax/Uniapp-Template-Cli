@@ -31,10 +31,10 @@ import { WotResolver } from './wot-ui-resolver'
 
 // https://vitejs.dev/config/
 export default async ({ mode }: ConfigEnv) => {
-  const { UNI_PLATFORM, VITE_USER_NODE_ENV, SKIP_OPEN_DEVTOOLS } = process.env
+  const { UNI_PLATFORM, SKIP_OPEN_DEVTOOLS } = process.env
   const env = loadEnv(mode, path.resolve(process.cwd(), 'env'))
-  const { VITE_APP_PORT, VITE_SERVER_BASEURL, VITE_APP_TITLE, VITE_APP_PUBLIC_BASE, VITE_APP_PROXY_ENABLE, VITE_APP_PROXY_PREFIX } = env
-  const isBuild = VITE_USER_NODE_ENV === 'production'
+  const { VITE_APP_PORT, VITE_SERVER_BASEURL, VITE_APP_TITLE, VITE_APP_PUBLIC_BASE, VITE_APP_PROXY_ENABLE, VITE_APP_PROXY_PREFIX, VITE_USER_NODE_ENV } = env
+  const isBuild = VITE_USER_NODE_ENV === 'production' || mode === 'production'
   const isMpWeixin = UNI_PLATFORM === 'mp-weixin'
   console.warn('UNI_PLATFORM -> ', UNI_PLATFORM) // 得到 mp-weixin, h5, app 等
 
