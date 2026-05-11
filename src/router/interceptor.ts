@@ -1,11 +1,17 @@
 /**
  * 路由拦截，通常也是登录拦截
  */
-import { getAllPages, getCurrentPage, parseUrl } from '@/router'
 import { HOME_PAGE, LOGIN_PAGE } from '@/router/router.ts'
+import { getAllPages, getCurrentPage, parseUrl } from '@/router/utils'
 import { userStore } from '@/stores/userStore.ts'
 
 export const FG_LOG_ENABLE = false
+
+function logRouteInterceptor(...data: any) {
+  if (FG_LOG_ENABLE) {
+    console.log(data)
+  }
+}
 
 export function judgeIsNeedLoginPath(path: string) {
   const allExcludeLoginPages = getAllPages('needLogin') // dev 环境下，需要每次都重新获取，否则新配置就不会生效
@@ -20,12 +26,12 @@ export const navigateToInterceptor = {
       return
     }
     let { path, query: _query } = parseUrl(url)
-    if (FG_LOG_ENABLE) console.log('\n\n路由拦截器:-------------------------------------')
-    if (FG_LOG_ENABLE) console.log('路由拦截器 1: url->', url, ', query ->', query)
+    logRouteInterceptor('\n\n路由拦截器:-------------------------------------')
+    logRouteInterceptor('路由拦截器 1: url->', url, ', query ->', query)
     const myQuery = { ..._query, ...query }
     // /pages/route-interceptor/index?name=feige&age=30
-    if (FG_LOG_ENABLE) console.log('路由拦截器 2: path->', path, ', _query ->', _query)
-    if (FG_LOG_ENABLE) console.log('路由拦截器 3: myQuery ->', myQuery)
+    logRouteInterceptor('路由拦截器 2: path->', path, ', _query ->', _query)
+    logRouteInterceptor('路由拦截器 3: myQuery ->', myQuery)
     // 处理相对路径
     if (!path?.startsWith('/')) {
       const currentPath = getCurrentPage()?.route || ''
@@ -34,13 +40,13 @@ export const navigateToInterceptor = {
       path = `${baseDir}/${path}`
     }
     // 处理路由不存在的情况
-    if (path !== '/' && !getAllPages().some((page) => `/${page.path}` === path)) {
+    if (path !== '/' && !getAllPages().some((page) => page.path === path)) {
       console.warn('路由不存在:', path)
       router.notFound()
       return false // 明确表示阻止原路由继续执行
     }
     const tokenStore = userStore()
-    if (FG_LOG_ENABLE) console.log('tokenStore.hasLogin:', tokenStore.hasLogin())
+    logRouteInterceptor('tokenStore.hasLogin:', tokenStore.hasLogin())
     // 不管黑白名单，登录了就直接去吧（但是当前不能是登录页）
     if (tokenStore.hasLogin()) {
       if (path !== LOGIN_PAGE) {
@@ -60,7 +66,7 @@ export const navigateToInterceptor = {
     }
     const redirectQuery = `?redirect=${encodeURIComponent(fullPath)}`
     if (judgeIsNeedLoginPath(path)) {
-      if (FG_LOG_ENABLE) console.log('2 isNeedLogin(黑名单策略) url:', fullPath)
+      logRouteInterceptor('2 isNeedLogin(黑名单策略) url:', fullPath)
       router.login(redirectQuery)
       return false // 修改为false，阻止原路由继续执行
     }
