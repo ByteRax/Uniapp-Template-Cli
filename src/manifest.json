@@ -1,5 +1,5 @@
 {
-  "name": "uniapp-template-cli-release",
+  "name": "uniapp-template-cli-debug",
   "appid": "__UNI__B746FDE",
   "description": "由 uniapp + Vue3 + Ts + Vite5 + UnoCss 构成的开发模板",
   "versionName": "1.0.2025121201",
@@ -37,7 +37,10 @@
         ],
         "minSdkVersion": 21,
         "targetSdkVersion": 30,
-        "abiFilters": ["armeabi-v7a", "arm64-v8a"]
+        "abiFilters": [
+          "armeabi-v7a",
+          "arm64-v8a"
+        ]
       },
       "ios": {},
       "sdkConfigs": {},
@@ -98,7 +101,7 @@
       "ignoreUploadUnusedFiles": false
     },
     "usingComponents": true,
-    "projectname": "uniapp-template-cli-release",
+    "projectname": "uniapp-template-cli-debug",
     "darkmode": true,
     "themeLocation": "theme.json",
     "optimization": {
@@ -118,7 +121,9 @@
       "globalObjectMode": "enable",
       "transpile": {
         "script": {
-          "ignore": ["node_modules/**"]
+          "ignore": [
+            "node_modules/**"
+          ]
         }
       }
     }
@@ -133,6 +138,7 @@
     "enable": false
   },
   "vueVersion": "3",
+  "locale": "zh-Hans",
   "h5": {
     "router": {
       "base": "/"

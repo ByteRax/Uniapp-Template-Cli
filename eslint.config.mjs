@@ -47,7 +47,7 @@ export default uni({
 
     // ==================== Vue 规则 ====================
     // https://eslint.vuejs.org/rules/
-    // Oxfmt 负责代码格式化，这里仅保留 Vue 模板与 SFC 结构相关规则
+    // Prettier 负责代码格式化，这里仅保留 Vue 模板与 SFC 结构相关规则
     'vue/block-order': [
       'error',
       {
@@ -75,7 +75,7 @@ export default uni({
         math: 'always'
       }
     ],
-    'vue/max-attributes-per-line': 'off', // 禁用，交给 Oxfmt 的 singleAttributePerLine 处理
+    'vue/max-attributes-per-line': 'off', // 禁用，交给 Prettier 的 singleAttributePerLine 处理
     'vue/multi-word-component-names': ['warn', { ignores: ['index', '404', 'App', 'App.ku', 'login', 'paging'] }],
     'vue/no-arrow-functions-in-watch': 'off',
     'vue/no-deprecated-v-on-native-modifier': 'error',
@@ -95,28 +95,30 @@ export default uni({
     'vue/valid-v-on': 'error',
     'vue/valid-v-slot': 'error',
     'vue/v-for-delimiter-style': ['error', 'in'],
-    'vue/singleline-html-element-content-newline': 'off', // 禁用单行元素内容换行检查，避免与 Oxfmt 冲突
-    'vue/comma-dangle': 'off', // 禁用 Vue 文件中的尾随逗号检查，避免与 Oxfmt 冲突
+    'vue/singleline-html-element-content-newline': 'off', // 禁用单行元素内容换行检查，避免与 Prettier 冲突
+    'vue/comma-dangle': 'off', // 禁用 Vue 文件中的尾随逗号检查，避免与 Prettier 冲突
 
     // ==================== 样式规则 ====================
     '@stylistic/brace-style': ['error', '1tbs'],
-    '@stylistic/comma-dangle': 'off', // 禁用尾随逗号检查，避免与 Oxfmt 冲突
-    '@stylistic/indent': 'off', // 禁用缩进检查，避免与 Oxfmt 冲突
-    '@stylistic/member-delimiter-style': 'off', // 禁用类型成员分隔符检查，避免与 Oxfmt 冲突
+    '@stylistic/comma-dangle': 'off', // 禁用尾随逗号检查，避免与 Prettier 冲突
+    '@stylistic/indent': 'off', // 禁用缩进检查，避免与 Prettier 冲突
+    '@stylistic/member-delimiter-style': 'off', // 禁用类型成员分隔符检查，避免与 Prettier 冲突
     '@stylistic/quotes': ['error', 'single', { avoidEscape: true }],
+    '@stylistic/quote-props': 'off', // 属性名引号风格交给 Prettier
     '@stylistic/semi': ['error', 'never'],
     'style/arrow-parens': ['error', 'always'],
-    'style/comma-dangle': 'off', // 禁用尾随逗号检查，避免与 Oxfmt 冲突
+    'style/comma-dangle': 'off', // 禁用尾随逗号检查，避免与 Prettier 冲突
     'style/comma-spacing': ['error', { before: false, after: true }],
     'style/indent': 'off', // 禁用缩进检查
     'style/indent-binary-ops': 'off', // 禁用二元操作符缩进检查
     'style/key-spacing': ['error', { beforeColon: false, afterColon: true }],
-    'style/member-delimiter-style': 'off', // 禁用类型成员分隔符检查，避免与 Oxfmt 冲突
+    'style/member-delimiter-style': 'off', // 禁用类型成员分隔符检查，避免与 Prettier 冲突
+    'style/quote-props': 'off', // 属性名引号风格交给 Prettier
     'style/space-before-blocks': ['error', 'always'],
     'style/space-infix-ops': ['error'],
 
     // ==================== 其他规则 ====================
-    'antfu/if-newline': 'off', // 禁用 if 换行检查，避免与 Oxfmt 冲突
+    'antfu/if-newline': 'off', // 禁用 if 换行检查，避免与 Prettier 冲突
     'antfu/curly': 'off', // 禁用强制大括号检查，允许单行 if 语句
     'antfu/top-level-function': 'off', // 禁用顶层函数必须使用 function 关键字的检查
     'object-shorthand': 'off', // 禁用属性简写检查（Expected property shorthand.）
@@ -152,7 +154,7 @@ export default uni({
     'prefer-rest-params': 'error',
     'prefer-spread': 'error',
     'prefer-template': 'error',
-    'unicorn/number-literal-case': 'off', // 禁用数字字面量大小写检查，避免与 Oxfmt 冲突
+    'unicorn/number-literal-case': 'off', // 禁用数字字面量大小写检查，避免与 Prettier 冲突
     'unused-imports/no-unused-vars': 'off',
     '@stylistic/operator-linebreak': 'off', // 禁用操作符换行位置检查
     'style/operator-linebreak': 'off' // 同时禁用 style/ 前缀的规则
