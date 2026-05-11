@@ -27,33 +27,15 @@ import ViteRestart from 'vite-plugin-restart'
 import { handlePageName } from './vite-plugins/vite-config-uni-pages'
 import openDevTools from './vite-plugins/vite-open-dev-tools'
 import { AutoVersion } from './vite-plugins/vite-plugin-auto-version'
-
-function kebabCase(value: string) {
-  return value.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase()
-}
-
-function WotUiResolver() {
-  return {
-    type: 'component' as const,
-    resolve: (name: string) => {
-      if (!name.match(/^Wd[A-Z]/)) {
-        return undefined
-      }
-      const compName = kebabCase(name)
-      return {
-        name,
-        from: `@wot-ui/ui/components/${compName}/${compName}.vue`
-      }
-    }
-  }
-}
+import { WotResolver } from './wot-ui-resolver'
 
 // https://vitejs.dev/config/
 export default async ({ mode }: ConfigEnv) => {
   const { UNI_PLATFORM, VITE_USER_NODE_ENV, SKIP_OPEN_DEVTOOLS } = process.env
   const env = loadEnv(mode, path.resolve(process.cwd(), 'env'))
-  const { VITE_APP_PORT, VITE_SERVER_BASEURL, VITE_APP_TITLE, VITE_DELETE_CONSOLE, VITE_APP_PUBLIC_BASE, VITE_APP_PROXY_ENABLE, VITE_APP_PROXY_PREFIX } = env
+  const { VITE_APP_PORT, VITE_SERVER_BASEURL, VITE_APP_TITLE, VITE_APP_PUBLIC_BASE, VITE_APP_PROXY_ENABLE, VITE_APP_PROXY_PREFIX } = env
   const isBuild = VITE_USER_NODE_ENV === 'production'
+  const isMpWeixin = UNI_PLATFORM === 'mp-weixin'
   console.warn('UNI_PLATFORM -> ', UNI_PLATFORM) // 得到 mp-weixin, h5, app 等
 
   return defineConfig({
@@ -80,7 +62,7 @@ export default async ({ mode }: ConfigEnv) => {
       }),
       // Components 需要在 Uni 之前引入
       UniComponents({
-        resolvers: [WotUiResolver()],
+        resolvers: [WotResolver()],
         extensions: ['vue'],
         deep: true, // 是否递归扫描子目录，
         directoryAsNamespace: false, // 是否把目录名作为命名空间前缀，true 时组件名为 目录名+组件名，
@@ -90,7 +72,31 @@ export default async ({ mode }: ConfigEnv) => {
       UniKuRoot({
         enabledGlobalRef: true
       }),
-      Uni(),
+      isMpWeixin && {
+        name: 'mp-weixin-empty-compressor',
+        resolveId(source) {
+          if (source.endsWith('/compressor.min.js') || source === './compressor.min.js') {
+            return '\0mp-weixin-empty-compressor'
+          }
+        },
+        load(id) {
+          if (id === '\0mp-weixin-empty-compressor') {
+            // H5 专用 Compressor.js 不参与微信小程序 dev/build 打包。
+            return 'export {}'
+          }
+        }
+      },
+      Uni({
+        vueOptions: {
+          template: {
+            transformAssetUrls: {
+              tags: {
+                'wd-img': ['src']
+              }
+            }
+          }
+        }
+      }),
       {
         // 临时解决 dcloudio 官方的 @dcloudio/uni-mp-compiler 出现的编译 BUG
         // 参考 github issue: https://github.com/dcloudio/uni-app/issues/4952
@@ -182,6 +188,8 @@ export default async ({ mode }: ConfigEnv) => {
       }),
       // 点击页面上的 DOM，它能够自动打开你的 IDE 并将光标定位到 DOM 对应的源代码位置。[Mac 系统默认组合键是 Option + Shift；Window 的默认组合键是 Alt + Shift，在浏览器控制台会输出相关组合键提示]
       codeInspectorPlugin({
+        showSwitch: true,
+        autoToggle: false,
         bundler: 'vite'
       }),
       // h5环境增加 BUILD_TIME 和 BUILD_BRANCH

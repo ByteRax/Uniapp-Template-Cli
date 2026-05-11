@@ -5,6 +5,7 @@ import { setupStore } from '@/stores'
 import App from './App.vue'
 import 'virtual:uno.css'
 import '@/styles/common.scss'
+import '@/styles/variable.scss'
 
 export function createApp() {
   const app = createSSRApp(App)
