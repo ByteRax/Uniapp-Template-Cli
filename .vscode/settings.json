@@ -32,10 +32,10 @@
     ".eslintrc.cjs": ".eslintignore,.prettierignore,.stylelintignore,.commitlintrc.*,.stylelintrc.*,.eslintrc-auto-import.json,.editorconfig,.commitlint.cjs"
   },
   // 自动格式化
-  "editor.defaultFormatter": "oxc.oxc-vscode",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.bracketPairColorization.enabled": true,
   "editor.guides.bracketPairs": "active",
-  "editor.formatOnSave": false,
+  "editor.formatOnSave": true,
   "editor.formatOnSaveMode": "file",
   "files.eol": "\n", // 新文件默认使用 LF
   "files.insertFinalNewline": true, // 文件末尾自动添加空行（推荐）
@@ -47,19 +47,19 @@
     "source.fixAll.stylelint": "explicit"
   },
   "[vue]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[html]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[typescript]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[javascript]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[scss]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   // 保存
   "files.autoSave": "afterDelay",
