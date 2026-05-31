@@ -7,7 +7,6 @@ type _LocationUrl =
   "/pages/index/index" |
   "/pages/index/paging" |
   "/pages/index/testA" |
-  "/pages/index/testB" |
   "/pages-sub/404/index" |
   "/pages-sub/login/login" |
   "/pages-sub/styles/index" |

@@ -37,7 +37,6 @@ function textHttp() {
         <wd-cell is-link title="下拉刷新框架" @click="router.push('/pages/index/paging')" />
         <wd-cell is-link title="Unocss 原子化" @click="router.push('/pages-sub/styles/index')" />
         <wd-cell is-link title="测试页面A" @click="router.push('/pages/index/testA')" />
-        <wd-cell is-link title="测试页面B" @click="router.push('/pages/index/testB')" />
         <wd-cell is-link title="测试网络请求" @click="textHttp()" />
       </wd-cell-group>
     </view>

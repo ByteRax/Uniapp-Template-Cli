@@ -52,14 +52,6 @@
         "navigationBarTitleText": "我是testA"
       },
       "name": "PAGES_INDEX_TESTA"
-    },
-    {
-      "path": "pages/index/testB",
-      "type": "page",
-      "style": {
-        "navigationBarTitleText": "我是testB"
-      },
-      "name": "PAGES_INDEX_TESTB"
     }
   ],
   "subPackages": [

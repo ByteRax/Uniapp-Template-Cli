@@ -13,7 +13,6 @@
 | `index/index.vue` | 首页和功能入口页。 |
 | `index/paging.vue` | `z-paging` 分页能力演示页。 |
 | `index/testA.vue` | 异步分包组件加载示例页。 |
-| `index/testB.vue` | 全局 loading 等能力演示页。 |
 
 ## Subdirectories
 
