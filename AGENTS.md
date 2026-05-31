@@ -226,4 +226,5 @@ pnpm format:check
 - 不要编造不存在的脚本、测试、部署平台或服务。
 - 不要用旧 README 中的脚本名覆盖 `package.json` 事实。
 - 不要把历史文档中的计划当作当前代码行为。
+- 每次修改 `*.js`、`*.cjs`、`*.mjs`、`*.ts`、`*.tsx`、`*.vue` 后，Codex 必须运行 `pnpm lint:fix` 自动修复 ESLint 问题；如果 `pnpm lint:fix` 修改了文件，完成前再运行 `pnpm lint` 复核。文档-only 变更可跳过 ESLint，并说明原因。
 - 完成前说明运行了哪些检查；未运行时给出具体原因。

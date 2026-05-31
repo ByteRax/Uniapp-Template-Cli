@@ -156,6 +156,8 @@ export default uni({
     'unicorn/number-literal-case': 'off', // 禁用数字字面量大小写检查，避免与格式化工具冲突
     'unused-imports/no-unused-vars': 'off',
     '@stylistic/operator-linebreak': 'off', // 禁用操作符换行位置检查
-    'style/operator-linebreak': 'off' // 同时禁用 style/ 前缀的规则
+    'style/operator-linebreak': 'off', // 同时禁用 style/ 前缀的规则
+    // uni 条件编译注释可能包裹 import，自动排序会破坏平台条件边界
+    'perfectionist/sort-imports': 'off'
   }
 }).append(unocss.configs.flat)
