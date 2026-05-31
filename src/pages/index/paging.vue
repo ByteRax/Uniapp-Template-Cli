@@ -19,26 +19,15 @@ function queryList(pageNo: number, pageSize: number) {
       listData = []
     }
     paging?.value?.complete(listData)
-    page?.value?.showSuccess()
   }, 500)
 }
-onMounted(() => {
-  // paging?.value.
-})
 </script>
 
 <template>
   <base-layout ref="page">
-    <z-paging
-      ref="paging"
-      :force-close-inner-list="true"
-      cell-height-mode="dynamic"
-      use-virtual-list
-      @query="queryList"
-      @virtual-list-change="(vList: ZPagingVirtualItem<{ title: string }>[]) => (dataList = vList)"
-    >
+    <z-paging ref="paging" :force-close-inner-list="true" cell-height-mode="dynamic" use-virtual-list @query="queryList" @virtual-list-change="(vList: ZPagingVirtualItem<{ title: string }>[]) => (dataList = vList)">
       <view v-for="item in dataList" :id="`zp-id-${item.zp_index}`" :key="item.zp_index" class="block">
-        <text>测试列表XXXXXXXXXX</text>
+        <text>测试列表{{ item.zp_index }}</text>
       </view>
     </z-paging>
   </base-layout>

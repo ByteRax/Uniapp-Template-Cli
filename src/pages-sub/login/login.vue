@@ -40,7 +40,6 @@ function doLogin() {
 
 <template>
   <view class="login">
-    <view class="text-center">登录页</view>
-    <button class="text-center w-40 mt-4" @click="doLogin">点击模拟登录</button>
+    <button class="text-center mt-4" @click="doLogin">点击模拟登录</button>
   </view>
 </template>

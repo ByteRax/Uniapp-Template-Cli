@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+// 组件选项配置
 defineOptions({
   name: 'BaseLayout',
   inheritAttrs: true,
@@ -15,13 +16,19 @@ const props = withDefaults(defineProps<Props>(), {
   showLogin: false
 })
 
+// 组件 Props 定义
 interface Props {
+  /** 布局容器高度 */
   height?: string
+  /** 是否自动显示加载状态 */
   autoLoading?: boolean
+  /** 是否显示登录提示 */
   showLogin?: boolean
+  /** 背景颜色 */
   bgColor?: string
 }
 
+// 布局状态管理
 const state = reactive({
   showLoading: false,
   showError: false,
@@ -30,6 +37,7 @@ const state = reactive({
   errorCallback: () => {}
 })
 
+// 是否显示成功状态（没有加载、错误或空数据）
 const success: Ref<boolean> = computed(() => {
   return !(state.showLoading || state.showError || state.showEmpty)
 })
@@ -40,26 +48,38 @@ onBeforeMount(() => {
   }
 })
 
+/**
+ * 重置布局状态
+ */
 function resetState() {
-  Object.assign(state, {
-    showLoading: false,
-    showError: false,
-    showEmpty: false,
-    errorStr: '',
-    errorCallback: () => {}
-  })
+  state.showLoading = false
+  state.showError = false
+  state.showEmpty = false
+  state.errorStr = ''
+  state.errorCallback = () => {}
 }
 
+/**
+ * 显示加载状态
+ */
 function showLoading() {
   resetState()
   state.showLoading = true
 }
 
+/**
+ * 显示空数据状态
+ */
 function showEmpty() {
   resetState()
   state.showEmpty = true
 }
 
+/**
+ * 显示错误状态
+ * @param errorStr 错误提示文本
+ * @param errorCallback 重试回调函数
+ */
 function showError(errorStr: string, errorCallback: () => void) {
   resetState()
   state.showError = true
@@ -67,15 +87,25 @@ function showError(errorStr: string, errorCallback: () => void) {
   state.errorCallback = errorCallback
 }
 
-function showSuccess() {
+/**
+ * 显示成功状态（显示内容）
+ * @param isEmpty 是否展示空数据状态
+ */
+function showSuccess(isEmpty = false) {
+  console.log('调用成功了')
   resetState()
+  state.showEmpty = isEmpty
 }
 
+/**
+ * 处理重试按钮点击事件
+ */
 function handleRetry() {
   state.errorCallback?.()
   showLoading()
 }
 
+// 暴露给父组件的方法
 defineExpose<BaseLayoutRef>({
   showLoading,
   showEmpty,
@@ -99,7 +129,7 @@ defineExpose<BaseLayoutRef>({
       </view>
 
       <view v-if="state.showError" class="flex-col-center text-#777">
-        <wd-icon name="file-excel" size="46" />
+        <wd-icon name="drive-file" size="46" />
         <text class="m-t-10rpx">
           {{ state.errorStr || '加载失败' }}
         </text>
