@@ -1,0 +1,4 @@
+interface:
+  display_name: "项目优化审查"
+  short_description: "默认全项目扫描可维护性问题，并按需进入执行或专项优化模式。"
+  default_prompt: "使用 project-optimization skill，默认以 scan 模式全项目扫描，优先发现可维护性问题，不修改代码。"

@@ -12,17 +12,21 @@ declare global {
   const EventNames: typeof import('../composables/eventBus/type').EventNames
   const FG_LOG_ENABLE: typeof import('../router/interceptor').FG_LOG_ENABLE
   const HOME_PAGE: typeof import('../router/router').HOME_PAGE
+  const ImageFileUtil: typeof import('../utils/file').ImageFileUtil
   const LOGIN_PAGE: typeof import('../router/router').LOGIN_PAGE
   const NOT_FOUND_PAGE: typeof import('../router/router').NOT_FOUND_PAGE
   const ZPagingVirtualItem: typeof import('z-paging/types').ZPagingVirtualItem
   const acceptHMRUpdate: typeof import('pinia').acceptHMRUpdate
   const asyncLoadScript: typeof import('../utils/script').asyncLoadScript
+  const buildUniRequestCookieString: typeof import('../utils/cookie').buildUniRequestCookieString
   const buildUrlWithParams: typeof import('../utils/string').buildUrlWithParams
   const checkIsLoadScript: typeof import('../utils/script').checkIsLoadScript
+  const compressImages: typeof import('../utils/compress/index').compressImages
+  const compressorMinD: typeof import('../utils/compress/compressor.min.d').default
   const computed: typeof import('vue').computed
   const createApp: typeof import('vue').createApp
   const createPinia: typeof import('pinia').createPinia
-  const currRoute: typeof import('../router/index').currRoute
+  const currRoute: typeof import('../router/utils').currRoute
   const customRef: typeof import('vue').customRef
   const debounce: typeof import('../utils/function').debounce
   const deepClone: typeof import('../utils/object').deepClone
@@ -30,20 +34,22 @@ declare global {
   const defineComponent: typeof import('vue').defineComponent
   const defineStore: typeof import('pinia').defineStore
   const effectScope: typeof import('vue').effectScope
-  const ensureDecodeURIComponent: typeof import('../router/index').ensureDecodeURIComponent
+  const ensureDecodeURIComponent: typeof import('../router/utils').ensureDecodeURIComponent
   const eventBus: typeof import('../composables/eventBus/type').eventBus
   const formatDate: typeof import('../utils/date').formatDate
-  const fullyDecodeUrl: typeof import('../router/index').fullyDecodeUrl
+  const formatFileSize: typeof import('../utils/file').formatFileSize
+  const fullyDecodeUrl: typeof import('../router/utils').fullyDecodeUrl
   const generateUUID: typeof import('../utils/index').generateUUID
   const getActivePinia: typeof import('pinia').getActivePinia
-  const getAllPages: typeof import('../router/index').getAllPages
+  const getAllPages: typeof import('../router/utils').getAllPages
   const getCurrentInstance: typeof import('vue').getCurrentInstance
-  const getCurrentPage: typeof import('../router/index').getCurrentPage
-  const getCurrentPath: typeof import('../router/index').getCurrentPath
+  const getCurrentPage: typeof import('../router/utils').getCurrentPage
+  const getCurrentPath: typeof import('../router/utils').getCurrentPath
   const getCurrentScope: typeof import('vue').getCurrentScope
   const getCurrentWatcher: typeof import('vue').getCurrentWatcher
   const getDeviceType: typeof import('../utils/platform').getDeviceType
-  const getLastPage: typeof import('../router/index').getLastPage
+  const getFileSize: typeof import('../utils/file').getFileSize
+  const getLastPage: typeof import('../router/utils').getLastPage
   const getOSType: typeof import('../utils/platform').getOSType
   const getValue: typeof import('../utils/object').getValue
   const h: typeof import('vue').h
@@ -55,6 +61,8 @@ declare global {
   const isAndroid: typeof import('../utils/platform').isAndroid
   const isApp: typeof import('../utils/platform').isApp
   const isArray: typeof import('../utils/object').isArray
+  const isDebug: typeof import('../utils/env').isDebug
+  const isDev: typeof import('../utils/env').isDev
   const isEmpty: typeof import('../utils/object').isEmpty
   const isH5: typeof import('../utils/platform').isH5
   const isHarmony: typeof import('../utils/platform').isHarmony
@@ -71,6 +79,7 @@ declare global {
   const isNumber: typeof import('../utils/number').isNumber
   const isObject: typeof import('../utils/object').isObject
   const isObjectEmpty: typeof import('../utils/object').isObjectEmpty
+  const isProd: typeof import('../utils/env').isProd
   const isProxy: typeof import('vue').isProxy
   const isReactive: typeof import('vue').isReactive
   const isReadonly: typeof import('vue').isReadonly
@@ -132,8 +141,8 @@ declare global {
   const onWatcherCleanup: typeof import('vue').onWatcherCleanup
   const parse: typeof import('../utils/json').parse
   const parseJSON: typeof import('../utils/json').parseJSON
-  const parseUrl: typeof import('../router/index').parseUrl
-  const parseUrlToObj: typeof import('../router/index').parseUrlToObj
+  const parseUrl: typeof import('../router/utils').parseUrl
+  const parseUrlToObj: typeof import('../router/utils').parseUrlToObj
   const platform: typeof import('../utils/platform').default
   const provide: typeof import('vue').provide
   const reactive: typeof import('vue').reactive
@@ -145,6 +154,7 @@ declare global {
   const router: typeof import('../router/router').default
   const safeJsonParse: typeof import('../utils/json').safeJsonParse
   const setActivePinia: typeof import('pinia').setActivePinia
+  const setCookie: typeof import('../utils/cookie').setCookie
   const setMapStoreSuffix: typeof import('pinia').setMapStoreSuffix
   const setValue: typeof import('../utils/object').setValue
   const setupRoute: typeof import('../router/index').setupRoute
@@ -220,6 +230,12 @@ declare global {
   export type { Apis } from '../utils/Apis'
   import('../utils/Apis')
   // @ts-ignore
+  export type { CookieInput, CookieOptions } from '../utils/cookie'
+  import('../utils/cookie')
+  // @ts-ignore
+  export type { ImageFileUtil, SelectedImageFile, ImageCompressionLogItem } from '../utils/file'
+  import('../utils/file')
+  // @ts-ignore
   export type { PlatformType } from '../utils/platform'
   import('../utils/platform')
   // @ts-ignore
@@ -229,8 +245,8 @@ declare global {
   export type { ToastIcon, ToastOption, ShowLoadingOption } from '../utils/ui'
   import('../utils/ui')
   // @ts-ignore
-  export type { PageInstance } from '../router/index'
-  import('../router/index')
+  export type { PageInstance } from '../router/utils'
+  import('../router/utils')
 }
 
 // for vue template auto import
@@ -244,17 +260,21 @@ declare module 'vue' {
     readonly EventNames: UnwrapRef<typeof import('../composables/eventBus/type')['EventNames']>
     readonly FG_LOG_ENABLE: UnwrapRef<typeof import('../router/interceptor')['FG_LOG_ENABLE']>
     readonly HOME_PAGE: UnwrapRef<typeof import('../router/router')['HOME_PAGE']>
+    readonly ImageFileUtil: UnwrapRef<typeof import('../utils/file')['ImageFileUtil']>
     readonly LOGIN_PAGE: UnwrapRef<typeof import('../router/router')['LOGIN_PAGE']>
     readonly NOT_FOUND_PAGE: UnwrapRef<typeof import('../router/router')['NOT_FOUND_PAGE']>
     readonly ZPagingVirtualItem: UnwrapRef<typeof import('z-paging/types')['ZPagingVirtualItem']>
     readonly acceptHMRUpdate: UnwrapRef<typeof import('pinia')['acceptHMRUpdate']>
     readonly asyncLoadScript: UnwrapRef<typeof import('../utils/script')['asyncLoadScript']>
+    readonly buildUniRequestCookieString: UnwrapRef<typeof import('../utils/cookie')['buildUniRequestCookieString']>
     readonly buildUrlWithParams: UnwrapRef<typeof import('../utils/string')['buildUrlWithParams']>
     readonly checkIsLoadScript: UnwrapRef<typeof import('../utils/script')['checkIsLoadScript']>
+    readonly compressImages: UnwrapRef<typeof import('../utils/compress/index')['compressImages']>
+    readonly compressorMinD: UnwrapRef<typeof import('../utils/compress/compressor.min.d')['default']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>
     readonly createApp: UnwrapRef<typeof import('vue')['createApp']>
     readonly createPinia: UnwrapRef<typeof import('pinia')['createPinia']>
-    readonly currRoute: UnwrapRef<typeof import('../router/index')['currRoute']>
+    readonly currRoute: UnwrapRef<typeof import('../router/utils')['currRoute']>
     readonly customRef: UnwrapRef<typeof import('vue')['customRef']>
     readonly debounce: UnwrapRef<typeof import('../utils/function')['debounce']>
     readonly deepClone: UnwrapRef<typeof import('../utils/object')['deepClone']>
@@ -262,20 +282,22 @@ declare module 'vue' {
     readonly defineComponent: UnwrapRef<typeof import('vue')['defineComponent']>
     readonly defineStore: UnwrapRef<typeof import('pinia')['defineStore']>
     readonly effectScope: UnwrapRef<typeof import('vue')['effectScope']>
-    readonly ensureDecodeURIComponent: UnwrapRef<typeof import('../router/index')['ensureDecodeURIComponent']>
+    readonly ensureDecodeURIComponent: UnwrapRef<typeof import('../router/utils')['ensureDecodeURIComponent']>
     readonly eventBus: UnwrapRef<typeof import('../composables/eventBus/type')['eventBus']>
     readonly formatDate: UnwrapRef<typeof import('../utils/date')['formatDate']>
-    readonly fullyDecodeUrl: UnwrapRef<typeof import('../router/index')['fullyDecodeUrl']>
+    readonly formatFileSize: UnwrapRef<typeof import('../utils/file')['formatFileSize']>
+    readonly fullyDecodeUrl: UnwrapRef<typeof import('../router/utils')['fullyDecodeUrl']>
     readonly generateUUID: UnwrapRef<typeof import('../utils/index')['generateUUID']>
     readonly getActivePinia: UnwrapRef<typeof import('pinia')['getActivePinia']>
-    readonly getAllPages: UnwrapRef<typeof import('../router/index')['getAllPages']>
+    readonly getAllPages: UnwrapRef<typeof import('../router/utils')['getAllPages']>
     readonly getCurrentInstance: UnwrapRef<typeof import('vue')['getCurrentInstance']>
-    readonly getCurrentPage: UnwrapRef<typeof import('../router/index')['getCurrentPage']>
-    readonly getCurrentPath: UnwrapRef<typeof import('../router/index')['getCurrentPath']>
+    readonly getCurrentPage: UnwrapRef<typeof import('../router/utils')['getCurrentPage']>
+    readonly getCurrentPath: UnwrapRef<typeof import('../router/utils')['getCurrentPath']>
     readonly getCurrentScope: UnwrapRef<typeof import('vue')['getCurrentScope']>
     readonly getCurrentWatcher: UnwrapRef<typeof import('vue')['getCurrentWatcher']>
     readonly getDeviceType: UnwrapRef<typeof import('../utils/platform')['getDeviceType']>
-    readonly getLastPage: UnwrapRef<typeof import('../router/index')['getLastPage']>
+    readonly getFileSize: UnwrapRef<typeof import('../utils/file')['getFileSize']>
+    readonly getLastPage: UnwrapRef<typeof import('../router/utils')['getLastPage']>
     readonly getOSType: UnwrapRef<typeof import('../utils/platform')['getOSType']>
     readonly getValue: UnwrapRef<typeof import('../utils/object')['getValue']>
     readonly h: UnwrapRef<typeof import('vue')['h']>
@@ -287,6 +309,8 @@ declare module 'vue' {
     readonly isAndroid: UnwrapRef<typeof import('../utils/platform')['isAndroid']>
     readonly isApp: UnwrapRef<typeof import('../utils/platform')['isApp']>
     readonly isArray: UnwrapRef<typeof import('../utils/object')['isArray']>
+    readonly isDebug: UnwrapRef<typeof import('../utils/env')['isDebug']>
+    readonly isDev: UnwrapRef<typeof import('../utils/env')['isDev']>
     readonly isEmpty: UnwrapRef<typeof import('../utils/object')['isEmpty']>
     readonly isH5: UnwrapRef<typeof import('../utils/platform')['isH5']>
     readonly isHarmony: UnwrapRef<typeof import('../utils/platform')['isHarmony']>
@@ -303,6 +327,7 @@ declare module 'vue' {
     readonly isNumber: UnwrapRef<typeof import('../utils/number')['isNumber']>
     readonly isObject: UnwrapRef<typeof import('../utils/object')['isObject']>
     readonly isObjectEmpty: UnwrapRef<typeof import('../utils/object')['isObjectEmpty']>
+    readonly isProd: UnwrapRef<typeof import('../utils/env')['isProd']>
     readonly isProxy: UnwrapRef<typeof import('vue')['isProxy']>
     readonly isReactive: UnwrapRef<typeof import('vue')['isReactive']>
     readonly isReadonly: UnwrapRef<typeof import('vue')['isReadonly']>
@@ -364,8 +389,8 @@ declare module 'vue' {
     readonly onWatcherCleanup: UnwrapRef<typeof import('vue')['onWatcherCleanup']>
     readonly parse: UnwrapRef<typeof import('../utils/json')['parse']>
     readonly parseJSON: UnwrapRef<typeof import('../utils/json')['parseJSON']>
-    readonly parseUrl: UnwrapRef<typeof import('../router/index')['parseUrl']>
-    readonly parseUrlToObj: UnwrapRef<typeof import('../router/index')['parseUrlToObj']>
+    readonly parseUrl: UnwrapRef<typeof import('../router/utils')['parseUrl']>
+    readonly parseUrlToObj: UnwrapRef<typeof import('../router/utils')['parseUrlToObj']>
     readonly platform: UnwrapRef<typeof import('../utils/platform')['default']>
     readonly provide: UnwrapRef<typeof import('vue')['provide']>
     readonly reactive: UnwrapRef<typeof import('vue')['reactive']>
@@ -377,6 +402,7 @@ declare module 'vue' {
     readonly router: UnwrapRef<typeof import('../router/router')['default']>
     readonly safeJsonParse: UnwrapRef<typeof import('../utils/json')['safeJsonParse']>
     readonly setActivePinia: UnwrapRef<typeof import('pinia')['setActivePinia']>
+    readonly setCookie: UnwrapRef<typeof import('../utils/cookie')['setCookie']>
     readonly setMapStoreSuffix: UnwrapRef<typeof import('pinia')['setMapStoreSuffix']>
     readonly setValue: UnwrapRef<typeof import('../utils/object')['setValue']>
     readonly setupRoute: UnwrapRef<typeof import('../router/index')['setupRoute']>

@@ -20,7 +20,7 @@
 4. 任务涉及目录下的 `AGENTS.md`，例如 `src/AGENTS.md`、`src/http/AGENTS.md`、`src/router/AGENTS.md`。
 5. 相关源码或配置文件。写代码前先读现有实现，不要凭记忆改。
 
-不要把 README 旧内容、历史设计稿、`.omc/`、`dist/`、`node_modules/`、IDE 配置或生成文件当作源码事实。
+不要把 README 旧内容、历史设计稿、`dist/`、`node_modules/`、IDE 配置或生成文件当作源码事实。
 
 ## 仓库结构
 
@@ -34,7 +34,7 @@
 | `docs/`                       | 工程化说明和历史设计稿。                                     |
 | `.github/`                    | GitHub/Copilot 侧协作说明，当前没有 CI workflow。            |
 | `.husky/`                     | Git 钩子，提交前运行 lint-staged，提交信息运行 commitlint。  |
-| `.rules/`、`.agent/`、`.omc/` | 规则补充或历史 AI 笔记，作为参考，不作为运行时事实。         |
+| `.rules/`、`.agent/`          | 规则补充与 AI 协作配置（含 skills、rules），作为参考，不作为运行时事实。 |
 
 ## 关键文件
 
@@ -206,7 +206,7 @@ pnpm format:check
 - 不要提交密钥、token、微信上传私钥、真实生产接口凭证或本地环境覆盖。
 - 微信上传私钥如 `private.<appid>.key` / `private.key` 只能本地使用。
 - 不要随意改 `pnpm-lock.yaml`。只有依赖变更或安装命令确实导致锁文件更新时才提交。
-- 不要提交 `dist/`、`node_modules/`、`.omc/`、`.claude/worktrees/`、IDE 状态或自动生成类型文件。
+- 不要提交 `dist/`、`node_modules/`、`.claude/worktrees/`、IDE 状态或自动生成类型文件。
 
 ## 提交前检查清单
 

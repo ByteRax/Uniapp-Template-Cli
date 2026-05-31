@@ -15,7 +15,10 @@
 
 ## Subdirectories
 
-当前未发现需要单独文档化的子目录。
+| 目录 | 说明 |
+|------|------|
+| `rules/` | AI 代理规则文件（如 `uniapp.md`），通过 skill 或手动加载。 |
+| `skills/` | OpenAI Codex 格式的 skill 定义（如 `update-agents-md`、`project-optimization`）。 |
 
 ## For AI Agents
 
