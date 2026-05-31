@@ -4,7 +4,9 @@ import type { ShowLoadingOption, ToastIcon, ToastOption } from '@/utils/ui.ts'
 import { httpInstance } from '@/http'
 
 export class Apis {
-  static http: Request = httpInstance
+  static get http(): Request {
+    return httpInstance
+  }
 
   static showToast(option: ToastOption, icon?: ToastIcon) {
     ui.showToast(option)
