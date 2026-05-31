@@ -84,8 +84,9 @@ export default {
     if (currentPath === LOGIN_PAGE) {
       return
     }
-    this.push({
-      url
-    })
+    // 登录重定向应绕过路由锁，并使用 replace 防止回退到受保护页面
+    const app = getApp<{ globalData: Record<string, any> }>()
+    app.globalData[LOCK_KEY] = false
+    this.push({ url }, true)
   }
 }
