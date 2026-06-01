@@ -1,4 +1,4 @@
 interface:
-  display_name: "更新 AGENTS.md"
-  short_description: "按真实项目文件渐进更新 AGENTS.md 与规则索引。"
-  default_prompt: "使用 update-agents-md skill，基于当前仓库真实文件更新或优化 AGENTS.md。"
+  display_name: 更新 AGENTS.md
+  short_description: 按真实项目文件渐进更新 AGENTS.md 与规则索引。
+  default_prompt: 使用 update-agents-md skill，基于当前仓库真实文件更新或优化 AGENTS.md。

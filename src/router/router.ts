@@ -88,5 +88,10 @@ export default {
     const app = getApp<{ globalData: Record<string, any> }>()
     app.globalData[LOCK_KEY] = false
     this.push({ url }, true)
+  },
+  aiChat() {
+    this.push({
+      url: '/pages-sub/ai/chat'
+    })
   }
 }

@@ -36,8 +36,8 @@ export default {
 </script>
 
 <template>
-  <view :class="[transparent ? '' : 'bg-white dark:bg-[var(--wot-dark-background2)]', customClass]" class="mb-3 box-border w-full px-3 text-gray-500 last:mb-0 dark:text-gray-300">
-    <view class="px-4 py-3 text-26rpx">
+  <view :class="[transparent ? '' : 'bg-white dark:bg-[var(--wot-dark-background2)]', customClass]" class="box-border w-full text-gray-500 px-3 mb-3 dark:text-gray-300 last:mb-0">
+    <view class="text-26rpx px-4 py-3">
       {{ title }}
     </view>
     <view :style="transparent ? '' : style">

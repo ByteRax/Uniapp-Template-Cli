@@ -1,8 +1,8 @@
 export default {
   parserPreset: {
     parserOpts: {
-      headerPattern: /^\[(\w+)\]:\s(.+)$/,
-      headerCorrespondence: ['type', 'subject']
+      headerPattern: /^\[(\w+)\](?:\(([^)]+)\))?:\s(.+)$/,
+      headerCorrespondence: ['type', 'scope', 'subject']
     }
   },
   rules: {

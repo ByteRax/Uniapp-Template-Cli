@@ -36,6 +36,7 @@ function textHttp() {
       <wd-cell-group border custom-class="rounded-2! overflow-hidden mb-4">
         <wd-cell is-link title="下拉刷新框架" @click="router.push('/pages/index/paging')" />
         <wd-cell is-link title="Unocss 原子化" @click="router.push('/pages-sub/styles/index')" />
+        <wd-cell is-link title="AI会话" @click="router.aiChat()" />
         <wd-cell is-link title="测试页面A" @click="router.push('/pages/index/testA')" />
         <wd-cell is-link title="测试网络请求" @click="textHttp()" />
       </wd-cell-group>

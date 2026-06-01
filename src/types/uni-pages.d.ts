@@ -8,6 +8,7 @@ type _LocationUrl =
   "/pages/index/paging" |
   "/pages/index/testA" |
   "/pages-sub/404/index" |
+  "/pages-sub/ai/chat" |
   "/pages-sub/login/login" |
   "/pages-sub/styles/index" |
   "/pages-sub/webview/webView";
