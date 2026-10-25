@@ -10,7 +10,7 @@
 - `manifest.config.ts` 结合 `package.json` 和 `env/` 生成 `src/manifest.json`。
 - `src/main.ts` 依次执行 `setupStore()`、`setupRoute()`、`setupHttp()`，并配置 `z-paging` 全局默认行为。
 
-包管理器固定为 pnpm，当前 `packageManager` 为 `pnpm@10.25.0`，Node.js 要求 `>= 22`。
+包管理器固定为 pnpm，当前 `packageManager` 为 `pnpm@10.25.0`，Node.js 要求 `>= 22.22.2`。
 
 ## 开始任务前先读
 
@@ -47,7 +47,7 @@
 | `getEnv.ts`            | 解析命令参数并从 `env/` 目录加载环境变量。                                                                  |
 | `uno.config.ts`        | UnoCSS 规则与预设。                                                                                         |
 | `uno-color-mapping.ts` | 暗色主题变量与颜色映射。                                                                                    |
-| `eslint.config.mjs`    | ESLint 9 flat config，基于 `@uni-helper/eslint-config` 并追加 UnoCSS 插件。                                 |
+| `eslint.config.mjs`    | ESLint 10 flat config，基于 `@uni-helper/eslint-config` 并追加 UnoCSS 插件。                                |
 | `.prettierrc.cjs`      | Prettier 配置。                                                                                             |
 | `commitlint.config.ts` | 提交信息格式约束。                                                                                          |
 
@@ -70,7 +70,7 @@ pnpm dev:h5:production
 pnpm dev:h5:ssr
 ```
 
-`dev:h5` 会先清理 `VITE_APP_PORT` 对应端口，再执行类型检查。
+`dev:h5` 直接启动 UniApp H5 开发服务。
 
 ### 小程序开发
 
@@ -138,7 +138,7 @@ pnpm format
 pnpm format:check
 ```
 
-当前没有 `pnpm test`。文档变更注意：`.prettierignore` 会忽略 `*.md`，`pnpm format:check` 不会覆盖根目录 Markdown。
+`pnpm test` 启动 Vitest 监听模式，`pnpm test:run` 执行一次行为回归。文档变更仍需单独检查，避免默认格式配置漏掉 Markdown。
 
 ## 环境变量
 
@@ -170,7 +170,7 @@ pnpm format:check
 
 - Vue SFC 使用 `<script setup>`，块顺序必须是 `script`、`template`、`style`。
 - TypeScript 严格模式开启，`verbatimModuleSyntax` 开启，类型导入使用 `import type`。
-- Prettier：2 空格缩进、单引号、无分号、无尾随逗号、LF。
+- Oxfmt：2 空格缩进、单引号、无分号、无尾随逗号、LF。
 - ESLint 使用 `eslint.config.mjs`，不要绕过 `vue/block-order`、`vue/component-api-style`、`vue/define-props-declaration` 等结构规则。
 - 组件模板名使用 PascalCase。Wot 组件通过 `wd-*` easycom 和 `WotResolver` 自动解析。
 - 自动导入覆盖 Vue、Pinia、uni-app、Wot hooks、`src/composables/**`、`src/stores/**`、`src/utils/**`、`src/hooks/**`、`src/router/**`。重命名导出前必须全局检索。

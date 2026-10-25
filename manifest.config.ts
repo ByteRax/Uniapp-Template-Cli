@@ -2,13 +2,13 @@ import { readFileSync } from 'node:fs'
 import path from 'node:path'
 // manifest.config.ts
 import { defineManifestConfig } from '@uni-helper/vite-plugin-uni-manifest'
-import { env } from './getEnv'
+import { env, isBuildCommand } from './getEnv'
 
 const packageJsonPath = path.resolve(__dirname, 'package.json')
 const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf-8'))
 
-const { VITE_APP_TITLE, VITE_UNI_APPID, VITE_WX_APPID, VITE_APP_PUBLIC_BASE, VITE_FALLBACK_LOCALE, VITE_USER_NODE_ENV } = env
-const isBuild = VITE_USER_NODE_ENV === 'production'
+const { VITE_APP_TITLE, VITE_UNI_APPID, VITE_WX_APPID, VITE_APP_PUBLIC_BASE, VITE_FALLBACK_LOCALE } = env
+const isBuild = isBuildCommand()
 
 export default defineManifestConfig({
   'name': `${VITE_APP_TITLE}-${isBuild ? 'release' : 'debug'}`,

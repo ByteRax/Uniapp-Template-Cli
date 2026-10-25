@@ -1,9 +1,11 @@
 <script lang="ts" setup>
 import { deepClone, isFunction } from '@wot-ui/ui/common/util'
+import { onBeforeUnmount } from 'vue'
 
 const { messageOptions, currentPage } = storeToRefs(useGlobalMessage())
 
 const messageBox = useDialog('globalMessage')
+const messageStore = useGlobalMessage()
 const currentPath = getCurrentPath()
 
 // #ifdef MP-ALIPAY
@@ -18,26 +20,33 @@ watch(
   () => messageOptions.value,
   (newVal) => {
     if (newVal) {
-      if (currentPage.value === currentPath) {
+      if (currentPage.value === currentPath && currentPath === getCurrentPath()) {
         const option = deepClone(newVal)
-        messageBox
-          .show(option)
-          .then((res) => {
+        messageBox.show(option).then(
+          (res) => {
+            if (messageOptions.value === newVal) messageStore.close()
             if (isFunction(option.success)) {
               option.success(res)
             }
-          })
-          .catch((err) => {
+          },
+          (err) => {
+            if (messageOptions.value === newVal) messageStore.close()
             if (isFunction(option.fail)) {
               option.fail(err)
             }
-          })
-      }
+          }
+        )
+      } else messageBox.close()
     } else {
       messageBox.close()
     }
-  }
+  },
+  { immediate: true }
 )
+onBeforeUnmount(() => {
+  messageBox.close()
+  if (currentPage.value === currentPath) messageStore.close()
+})
 </script>
 
 <script lang="ts">

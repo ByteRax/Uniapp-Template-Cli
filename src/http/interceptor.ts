@@ -15,8 +15,8 @@ const appKey = import.meta.env.VITE_APP_KEY
 let requestNum = 0
 // 重复请求
 const pendingRequests = new Map<string, RequestOptions>()
-// 401 logout lock: prevent concurrent 401 responses from triggering multiple logouts
-let isLoggingOut = false
+const loadingRequests = new Set<RequestOptions>()
+const requestSessions = new WeakMap<RequestOptions, object>()
 // 并发 token 刷新共用同一个 Promise，避免重复刷新
 let refreshTokenPromise: Promise<boolean> | null = null
 
@@ -48,20 +48,6 @@ async function refreshAccessToken() {
   }
 
   return refreshTokenPromise
-}
-
-async function logoutAndRedirectToLogin() {
-  if (isLoggingOut) {
-    return
-  }
-  isLoggingOut = true
-  try {
-    const tokenStore = userStore()
-    await tokenStore.logout()
-    router.login()
-  } finally {
-    isLoggingOut = false
-  }
 }
 
 function debugLogResponse(options: RequestOptions, response: ResponseResult, detailResult: unknown, isSuccess: boolean, message?: string) {
@@ -117,29 +103,27 @@ export const httpInterceptor: RequestInterceptor = {
     const meta: RequestMeta = options.meta || {}
     const { url, method, data } = options
     const requestKey = `${method}_${url}_${stringify(data)}`
-    // 存在相同请求则取消前一个
-    if (pendingRequests.has(requestKey)) {
-      const previousRequest = pendingRequests.get(requestKey)
-      previousRequest?.cancel()
-    }
+    const previousRequest = pendingRequests.get(requestKey)
     pendingRequests.set(requestKey, options)
     meta.requestKey = requestKey
-    if (meta.loading) addLoading()
+    if (meta.loading) {
+      loadingRequests.add(options)
+      addLoading()
+    }
+    // 先计入新请求，再取消同 key 的旧请求，避免 loading 闪断。
+    previousRequest?.cancel()
     const tokenStore = userStore()
-    if (!meta.skipTokenRefresh && !meta.skipUnauthorizedLogout && !tokenStore.hasLogin() && isNotEmpty(tokenStore.validToken)) {
+    if (!meta.skipTokenRefresh && !meta.skipUnauthorizedLogout && hasRefreshCapability(tokenStore) && hasRefreshToken(tokenStore) && !tokenStore.hasLogin()) {
       try {
         const refreshed = await refreshAccessToken()
-        if (!refreshed && hasRefreshToken(tokenStore)) {
-          await logoutAndRedirectToLogin()
-          throw new Error('登录已过期，请重新登录')
-        }
+        if (!refreshed) throw new Error('登录已过期，请重新登录')
       } catch (error) {
-        if (meta.loading) removeLoading()
-        pendingRequests.delete(requestKey)
-        await logoutAndRedirectToLogin()
+        tokenStore.clearSession()
+        router.login()
         throw error
       }
     }
+    requestSessions.set(options, tokenStore.tokenInfo)
     const token = tokenStore.validToken
     if (token) {
       options.header['Authorization'] = `Bearer ${token}`
@@ -168,11 +152,14 @@ export const httpInterceptor: RequestInterceptor = {
     // #endif
     return options
   },
+  complete: (options: RequestOptions) => {
+    const key = options.meta?.requestKey ?? ''
+    if (pendingRequests.get(key) === options) pendingRequests.delete(key)
+    if (loadingRequests.delete(options)) removeLoading()
+  },
   // 响应拦截器
   response: async <T>(options: RequestOptions, response: ResponseResult) => {
     const meta: RequestMeta = response.config?.meta || {}
-    if (meta.loading) removeLoading()
-    pendingRequests.delete(meta.requestKey ?? '')
     if (options.cancelFlag) {
       return new ResponseData<T>(-1, '取消请求')
     }
@@ -181,10 +168,12 @@ export const httpInterceptor: RequestInterceptor = {
     let responseMsg = ''
     let responseCode = -1
 
-    // 401 未授权：清除登录状态并跳转登录页（防并发重复触发）
+    // 迟到的旧会话响应不能清除新登录态；401 只清本地会话，不调用远端登出。
     if (statusCode === 401) {
-      if (!meta.skipUnauthorizedLogout) {
-        await logoutAndRedirectToLogin()
+      const tokenStore = userStore()
+      if (!meta.skipUnauthorizedLogout && requestSessions.get(options) === tokenStore.tokenInfo && tokenStore.tokenInfo.token) {
+        tokenStore.clearSession()
+        router.login()
       }
       const expiredMessage = '登录已过期，请重新登录'
       debugLogResponse(options, response, data, false, expiredMessage)

@@ -1,7 +1,7 @@
 import type { Rule } from 'unocss'
 import { presetUni } from '@uni-helper/unocss-preset-uni'
 import transformerCompileClass from '@unocss/transformer-compile-class'
-import { defineConfig, presetIcons, symbols, transformerDirectives, transformerVariantGroup } from 'unocss'
+import { cssIdRE, defineConfig, presetIcons, symbols, transformerDirectives, transformerVariantGroup } from 'unocss'
 import { generateDarkColorRules, generateDarkColorShortcuts } from './uno-color-mapping.ts'
 
 interface NumericRuleDefinition {
@@ -94,6 +94,7 @@ const numericRules = [
 ].map(createNumericRule)
 
 export default defineConfig({
+  content: { pipeline: { exclude: [cssIdRE, /[/\\]node_modules[/\\]/] } },
   presets: [
     presetUni({
       // 当前项目未使用 attributify 语法，关闭后可避免 uni 模板属性被误识别成非法样式规则

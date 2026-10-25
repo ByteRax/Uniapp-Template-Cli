@@ -3,32 +3,25 @@ import fs from 'node:fs'
 import path from 'node:path'
 import * as prettier from 'prettier'
 
-export function handlePageName(ctx: PageContext, inKey: string) {
-  if (!(inKey in ctx)) return
-  ;(ctx[inKey as keyof PageContext] as any[]).forEach((page: any) => {
-    // 配置优先级高于自动生成
-    if (page.name) return
-    // 将路径中的 /.- 替换为下划线，并转换为大写，作为路由名称
-    // 例如：路径 pages/home/index.page.vue 会生成路由名称 PAGES_HOME_INDEX_PAGE
-    // 你可以根据需要修改生成规则，建议通过 path 转化而成，大多数情况下能保持全局唯一，而且容易从 name 猜测页面所在
-    if (page.pages) {
-      // 分包
-      for (const pageItem of page.pages) {
-        pageItem.name = pageItem.path.replace(/[/.-]/g, '_').toUpperCase()
-      }
-    } else {
-      page.name = page.path.replace(/[/.-]/g, '_').toUpperCase()
-    }
+export function handlePageName(pages: PageContext['pageMetaData']) {
+  pages.forEach((page) => {
+    // 主包、分包都保留显式名称；只有缺失时才按路径生成。
+    if (!page['name']) page['name'] = page.path.replace(/[/.-]/g, '_').toUpperCase()
   })
 }
 
-export async function writePageConst(ctx: any) {
+export function handleSubPackagePageName(subPackages: PageContext['subPageMetaData']) {
+  subPackages.forEach((subPackage) => handlePageName(subPackage.pages))
+}
+
+export async function writePageConst(ctx: Pick<PageContext, 'pageMetaData' | 'subPageMetaData'>) {
   const pageConstEntries: string[] = []
-  ;[...ctx.pageMetaData, ...ctx.subPageMetaData].forEach((page: any) => {
+  const pages: PageContext['pageMetaData'] = [...ctx.pageMetaData, ...ctx.subPageMetaData.flatMap((subPackage) => subPackage.pages.map((page) => ({ ...page, path: `${subPackage.root}/${page.path}` })))]
+  pages.forEach((page) => {
     // 使用标题作为注释
     const comment = `/** ${page.style?.navigationBarTitleText || ''} */`
     // name 作为唯一键
-    pageConstEntries.push(`${comment}\n"${page.name}": "/${page.path}",\n`)
+    pageConstEntries.push(`${comment}\n${JSON.stringify(page['name'])}: ${JSON.stringify(`/${page.path}`)},\n`)
   })
   // 如果你是 ts 项目，可以对照参考改为 enum 或者其他形式
   const fileContent = `

@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { onBeforeUnmount, watch } from 'vue'
+
 const { toastOptions, currentPage } = storeToRefs(useGlobalToast())
 
 const { close: closeGlobalToast } = useGlobalToast()
@@ -18,14 +20,28 @@ watch(
   () => toastOptions.value,
   (newVal) => {
     if (newVal && newVal.show) {
-      if (currentPage.value === currentPath) {
-        toast.show(toastOptions.value)
+      if (currentPage.value === currentPath && currentPath === getCurrentPath()) {
+        toast.show({
+          ...newVal,
+          duration: 0,
+          closed: () => {
+            if (toastOptions.value === newVal) closeGlobalToast()
+            newVal.closed?.()
+          }
+        })
+      } else {
+        toast.close()
       }
     } else {
       toast.close()
     }
-  }
+  },
+  { immediate: true }
 )
+onBeforeUnmount(() => {
+  toast.close()
+  if (currentPage.value === currentPath) closeGlobalToast()
+})
 </script>
 
 <script lang="ts">
@@ -40,9 +56,9 @@ export default {
 
 <template>
   <!-- #ifdef MP-ALIPAY -->
-  <wd-toast v-if="hackAlipayVisible" :closed="closeGlobalToast" selector="globalToast" />
+  <wd-toast v-if="hackAlipayVisible" selector="globalToast" />
   <!-- #endif -->
   <!-- #ifndef MP-ALIPAY -->
-  <wd-toast :closed="closeGlobalToast" selector="globalToast" />
+  <wd-toast selector="globalToast" />
   <!-- #endif -->
 </template>

@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-onLaunch((options) => {
-  // console.log('初始化完成时触发', options?.path)
+onLaunch(() => {
+  // console.log('初始化完成时触发')
 })
-onShow((options) => {
-  // console.log('启动，或从后台进入前台显示', options?.path)
+onShow(() => {
+  // console.log('启动，或从后台进入前台显示')
 })
 onHide(() => {
   // console.log('从前台进入后台')

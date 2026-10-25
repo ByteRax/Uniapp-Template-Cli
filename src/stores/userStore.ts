@@ -1,7 +1,7 @@
 import type { IAuthLoginRes, ILoginForm } from '@/api/types/login'
 import type { ResponseData } from '@/http/types.ts'
 import { defineStore } from 'pinia'
-import { computed, ref } from 'vue' // 修复：导入 computed
+import { computed, ref, toRef } from 'vue'
 import { login as _login, logout as _logout, wxLogin as _wxLogin, getWxCode } from '@/api/login'
 import { useUserStore } from './user'
 
@@ -34,7 +34,7 @@ export const userStore = defineStore(
       }
       const now = Date.now()
       const expireTime = uni.getStorageSync('accessTokenExpireTime')
-      if (!expireTime) return true
+      if (typeof expireTime !== 'number' || !Number.isFinite(expireTime)) return true
       return now >= expireTime
     }
 
@@ -43,11 +43,10 @@ export const userStore = defineStore(
      * @param tokenInfo 登录返回的token信息
      */
     async function _postLogin(tokenInfo: ResponseData<IAuthLoginRes>) {
-      if (tokenInfo.data) {
+      if (tokenInfo.code === 0 && tokenInfo.data) {
         setTokenInfo(tokenInfo.data)
+        await useUserStore().login()
       }
-      const userStore = useUserStore()
-      await userStore.login()
     }
 
     /**
@@ -60,6 +59,7 @@ export const userStore = defineStore(
     const login = async (loginForm: ILoginForm) => {
       try {
         const res = await _login(loginForm)
+        if (res.code !== 0) return res
         await _postLogin(res)
         uni.showToast({
           title: '登录成功',
@@ -87,6 +87,7 @@ export const userStore = defineStore(
         // 获取微信小程序登录的code
         const code = await getWxCode()
         const res = await _wxLogin(code)
+        if (res.code !== 0) return res
         await _postLogin(res)
         uni.showToast({
           title: '登录成功',
@@ -106,31 +107,31 @@ export const userStore = defineStore(
     /**
      * 退出登录 并 删除用户信息
      */
+    const clearSession = () => {
+      uni.removeStorageSync('accessTokenExpireTime')
+      uni.removeStorageSync('refreshTokenExpireTime')
+      tokenInfo.value = { ...tokenInfoState }
+      uni.removeStorageSync('token')
+      useUserStore().logout()
+    }
+
     const logout = async () => {
+      const session = tokenInfo.value
       try {
         // TODO 实现自己的退出登录逻辑
         await _logout()
       } catch (error) {
         console.error('退出登录失败:', error)
       } finally {
-        // 无论成功失败，都需要清除本地token信息
-        // 清除存储的过期时间
-        uni.removeStorageSync('accessTokenExpireTime')
-        uni.removeStorageSync('refreshTokenExpireTime')
-        tokenInfo.value = { ...tokenInfoState }
-        uni.removeStorageSync('token')
-        const userStore = useUserStore()
-        userStore.logout()
+        // 旧会话的退出响应不能清除期间新建的登录态。
+        if (tokenInfo.value === session) clearSession()
       }
     }
     /**
      * 获取有效的token
-     * 注意：在computed中不直接调用异步函数，只做状态判断
-     * 实际的刷新操作应由调用方处理
+     * getter ref 每次访问时检查时钟，保持 validToken 字符串属性兼容。
      */
-    const getValidToken = computed(() => {
-      return tokenInfo.value.token ?? ''
-    })
+    const getValidToken = toRef(() => (hasLogin() ? tokenInfo.value.token : ''))
 
     /**
      * 检查是否有登录信息（不考虑token是否过期）
@@ -150,18 +151,10 @@ export const userStore = defineStore(
     }
 
     /**
-     * 尝试获取有效的token，如果过期且可刷新，则刷新token
+     * 单 Token 协议不提供刷新，过期时返回空字符串。
      * @returns 有效的token或空字符串
      */
     const tryGetValidToken = async (): Promise<string> => {
-      if (!getValidToken.value) {
-        try {
-          return getValidToken.value
-        } catch (error) {
-          console.error('尝试刷新token失败:', error)
-          return ''
-        }
-      }
       return getValidToken.value
     }
 
@@ -170,6 +163,7 @@ export const userStore = defineStore(
       login,
       wxLogin,
       logout,
+      clearSession,
       hasLogin,
       tryGetValidToken,
       validToken: getValidToken,

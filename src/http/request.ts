@@ -82,10 +82,10 @@ export class Request {
     return this.uploadFile<T>(requestOptions)
   }
 
-  async request<T>(options: RequestOptions): Promise<ResponseData<T>> {
+  request<T>(options: RequestOptions): Promise<ResponseData<T>> {
     options.meta = {
       ...this.config.meta,
-      ...(options.meta || {})
+      ...options.meta
     }
     options.dataType = options.dataType || this.config.dataType
     options.responseType = options.responseType || this.config.responseType
@@ -94,31 +94,14 @@ export class Request {
     options.header = Object.assign({}, this.config.header || {}, options.header || {})
     options.method = (options.method || this.config.method) as RequestOptions['method']
     options.timeout = options.timeout || this.config.timeout
-    if (this.interceptor?.request) {
-      this.options = await this.interceptor.request(options)
-      options = this.options
-    }
-    return new Promise<ResponseData<T>>((resolve, reject) => {
-      options.complete = async (response: any) => {
-        response.config = options
-        if (this.interceptor?.response) {
-          const resInterceptors = await this.interceptor.response<T>(options, response)
-          if (options.cancelFlag) {
-            reject(resInterceptors)
-          } else {
-            resolve(resInterceptors)
-          }
-        } else {
-          resolve(response)
-        }
-      }
-      options.task = uni.request({
-        ...options,
+    return this.sendRequest(options, (requestOptions, complete) =>
+      uni.request({
+        ...requestOptions,
         withCredentials: true,
         enableCookie: true,
-        complete: options.complete
+        complete
       })
-    })
+    )
   }
 
   /**
@@ -127,7 +110,7 @@ export class Request {
   async uploadFile<T>(options: RequestOptions): Promise<ResponseData<T>> {
     options.meta = {
       ...this.config.meta,
-      ...(options.meta || {})
+      ...options.meta
     }
     options.url = this.getUrl(options)
     options.data = options.data || {}
@@ -138,33 +121,70 @@ export class Request {
     // multipart 边界由运行时生成，避免沿用 JSON 请求头导致服务端无法解析文件。
     delete options.header['content-type']
     delete options.header['Content-Type']
-    if (this.interceptor?.request) {
-      this.options = await this.interceptor.request(options)
-      options = this.options
-    }
+    return this.sendRequest(options, (requestOptions, complete) =>
+      uni.uploadFile({
+        url: requestOptions.url,
+        filePath: requestOptions.filePath || '',
+        name: requestOptions.name || 'file',
+        formData: requestOptions.formData,
+        header: requestOptions.header,
+        timeout: requestOptions.timeout,
+        complete
+      })
+    )
+  }
+
+  private sendRequest<T>(initialOptions: RequestOptions, createTask: (options: RequestOptions, complete: (response: any) => void) => UniApp.RequestTask | UniApp.UploadTask): Promise<ResponseData<T>> {
     return new Promise<ResponseData<T>>((resolve, reject) => {
-      options.complete = async (response: any) => {
-        response.config = options
-        if (this.interceptor?.response) {
-          const resInterceptors = await this.interceptor.response<T>(options, response)
-          if (options.cancelFlag) {
-            reject(resInterceptors)
-          } else {
-            resolve(resInterceptors)
-          }
-        } else {
-          resolve(response)
+      let options = initialOptions
+      let settled = false
+      const callerComplete = initialOptions.complete
+      const finish = async (response: any) => {
+        if (settled) return
+        settled = true
+        options.onCancel = undefined
+        try {
+          this.interceptor.complete?.(options)
+          response.config = options
+          const result = this.interceptor.response ? await this.interceptor.response<T>(options, response) : response
+          callerComplete?.(response)
+          if (options.cancelFlag) reject(result)
+          else resolve(result)
+        } catch (error) {
+          reject(error)
         }
       }
-      options.task = uni.uploadFile({
-        url: options.url,
-        filePath: options.filePath || '',
-        name: options.name || 'file',
-        formData: options.formData,
-        header: options.header,
-        timeout: options.timeout,
-        complete: options.complete
-      })
+      const onCancel = () => {
+        void finish({ statusCode: 0, data: '', header: {}, cookies: [], errMsg: 'request:fail abort' })
+      }
+
+      options.onCancel = onCancel
+      if (options.cancelFlag) {
+        onCancel()
+        return
+      }
+
+      void (async () => {
+        try {
+          if (this.interceptor.request) options = await this.interceptor.request(options)
+          this.options = options
+          if (settled) return
+          options.onCancel = onCancel
+          options.complete = finish
+          options.task = createTask(options, finish)
+          if (options.cancelFlag) options.task.abort()
+        } catch (error) {
+          if (!settled) {
+            settled = true
+            options.onCancel = undefined
+            try {
+              this.interceptor.complete?.(options)
+            } finally {
+              reject(error)
+            }
+          }
+        }
+      })()
     })
   }
 

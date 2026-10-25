@@ -69,7 +69,7 @@ function _openDevTools(env = 'dev') {
 }
 
 interface OpenDevToolsOptions {
-  mode?: 'development' | 'production'
+  mode?: string
 }
 
 /**

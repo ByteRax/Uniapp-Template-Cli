@@ -9,7 +9,7 @@
 - Vite 5 构建链，集成 Uni 页面生成、manifest 生成、组件自动导入、自动导入、分包优化、UnoCSS、图片压缩和版本信息注入。
 - 页面配置源集中在 `pages.config.ts`，页面自身通过 `definePage()` 写入页面元数据，运行时生成 `src/pages.json`。
 - 应用配置源集中在 `manifest.config.ts`，结合 `package.json` 和 `env/` 生成 `src/manifest.json`。
-- 请求层封装 `uni.request` / `uni.uploadFile`，包含 token 注入、请求去重、loading、401 登出跳转、错误提示和 H5 代理处理。
+- 请求层封装 `uni.request` / `uni.uploadFile`，包含 token 注入、请求去重、loading、401 本地会话清理、错误提示和 H5 代理处理。
 - 路由层封装 UniApp 导航，包含路由存在性校验、登录拦截、重复跳转保护和快捷跳转方法。
 - 集成 Wot Design Uni、z-paging、UnoCSS 原子化样式与暗色主题变量。
 
@@ -22,12 +22,12 @@
 | 构建      | Vite 5、@dcloudio/uni、@uni-helper 系列插件、@uni-ku/bundle-optimizer   |
 | 状态管理  | Pinia、pinia-plugin-persistedstate                                      |
 | UI 与样式 | Wot Design Uni、z-paging、UnoCSS、Sass                                  |
-| 质量工具  | vue-tsc、ESLint 9 flat config、Prettier、Husky、lint-staged、commitlint |
+| 质量工具  | vue-tsc、Oxlint、ESLint 10 flat config、Oxfmt、Husky、lint-staged、commitlint |
 | 包管理器  | pnpm                                                                    |
 
 ## 环境要求
 
-- Node.js `>= 22`，仓库提供 `.nvmrc`，内容为 `v22`。
+- Node.js `>= 22.22.2`，仓库提供 `.nvmrc`，内容为 `v22`。
 - pnpm `>= 10.12.4`，当前 `packageManager` 为 `pnpm@10.25.0`。
 - 推荐编辑器：WebStorm 或 VS Code，并安装 Vue Official 扩展。
 - 小程序开发需要对应平台开发者工具。微信小程序产物位于 `dist/dev/mp-weixin` 或 `dist/build/mp-weixin`。
@@ -55,7 +55,7 @@ pnpm uvm
 pnpm dev:h5
 ```
 
-`dev:h5` 会先运行 `port:free` 清理 `env/` 中当前模式的 `VITE_APP_PORT`，再运行 `pnpm type-check`，最后启动 `uni`。如需跳过端口清理，可设置环境变量 `SKIP_KILL_PORT=true`。
+`dev:h5` 直接启动 UniApp H5 开发服务。模式由 `getEnv.ts` 根据命令参数解析；`--mode production` 仅选择生产环境变量，不等同于发布构建。
 
 其他 H5 开发命令：
 
@@ -151,9 +151,10 @@ pnpm build:custom -- mp-weixin
 
 ## 测试与检查
 
-当前仓库没有 `pnpm test` 脚本，也没有单元测试目录。代码变更后优先运行：
+项目提供 Vitest 行为回归和静态检查：
 
 ```bash
+pnpm test:run
 pnpm type-check
 pnpm lint
 pnpm format:check
@@ -161,9 +162,10 @@ pnpm format:check
 
 说明：
 
-- `pnpm type-check` 使用 `vue-tsc -p tsconfig.typecheck.json --noEmit`。
-- `pnpm lint` 使用 `eslint .`。
-- `pnpm format:check` 使用 `prettier --check .`，但 `.prettierignore` 当前会忽略 `*.md`，因此文档变更需要额外做人工校对或执行定向 Prettier 检查。
+- `pnpm test` 启动 Vitest 监听模式，`pnpm test:run` 执行一次行为回归。
+- `pnpm type-check` 使用 `vue-tsc --noEmit`。
+- `pnpm lint` 使用 Oxlint 检查项目文件，并由 ESLint 检查 Vue 单文件组件。
+- `pnpm format:check` 使用 Oxfmt 检查格式。
 - 修改页面生成、构建配置或端侧差异逻辑后，应补充对应端的 `pnpm dev:*` 或 `pnpm build:*` 验证。
 
 ## 常用脚本
@@ -172,16 +174,15 @@ pnpm format:check
 | -------------------------------------- | --------------------------------------------- |
 | `pnpm install`                         | 安装依赖，仅允许 pnpm。                       |
 | `pnpm uvm`                             | 运行 `@dcloudio/uvm`。                        |
-| `pnpm port:free -- --mode development` | 按 `env/` 中的 `VITE_APP_PORT` 清理占用端口。 |
-| `pnpm dev:h5`                          | 启动 H5 开发服务，包含端口清理和类型检查。    |
+| `pnpm dev:h5`                          | 启动 H5 开发服务。                           |
 | `pnpm dev:mp-weixin`                   | 启动微信小程序开发构建。                      |
 | `pnpm dev:app`                         | 启动 App 开发构建。                           |
 | `pnpm build:h5`                        | 构建 H5。                                     |
 | `pnpm build:mp-weixin`                 | 构建微信小程序。                              |
 | `pnpm upload:mp`                       | 构建并上传微信小程序，需本地上传私钥。        |
 | `pnpm type-check`                      | TypeScript 类型检查。                         |
-| `pnpm lint` / `pnpm lint:fix`          | ESLint 检查或自动修复。                       |
-| `pnpm format` / `pnpm format:check`    | Prettier 写入或检查。                         |
+| `pnpm lint` / `pnpm lint:fix`          | Oxlint 与 Vue ESLint 检查或修复。              |
+| `pnpm format` / `pnpm format:check`    | Oxfmt 写入或检查。                             |
 
 `pnpm upload:mp` 会先执行 `pnpm build:mp-weixin:production`，再调用微信小程序上传 API。上传脚本需要微信小程序代码上传私钥，例如根目录本地文件 `private.<appid>.key`，该类密钥不得提交到仓库。
 
@@ -199,7 +200,7 @@ pnpm format:check
 | 变量                    | 来源                 | 用途                                                    |
 | ----------------------- | -------------------- | ------------------------------------------------------- |
 | `VITE_APP_TITLE`        | `env/.env`           | 应用标题，进入页面全局标题、manifest 名称和 HTML 标题。 |
-| `VITE_APP_PORT`         | `env/.env`           | H5 dev server 端口，`port:free` 会读取它。              |
+| `VITE_APP_PORT`         | `env/.env`           | H5 dev server 端口。                                    |
 | `VITE_UNI_APPID`        | `env/.env`、模式文件 | UniApp appid，进入 manifest。                           |
 | `VITE_WX_APPID`         | `env/.env`、模式文件 | 微信小程序 appid，进入 manifest 和上传脚本。            |
 | `VITE_FALLBACK_LOCALE`  | `env/.env`           | manifest locale。                                       |
@@ -289,10 +290,6 @@ Husky 钩子：
 ### `pnpm dev`、`pnpm dev:mp`、`pnpm build:mp` 不存在
 
 这些是旧文档中的脚本名。请使用 `package.json` 中实际存在的脚本，例如 `pnpm dev:h5`、`pnpm dev:mp-weixin`、`pnpm build:mp-weixin`。
-
-### H5 启动前端口被强制关闭
-
-`dev:h5` 会运行 `scripts/force-kill-port.mjs` 清理 `VITE_APP_PORT` 对应端口。若当前端口上的进程不应被关闭，请改用其他端口或设置 `SKIP_KILL_PORT=true`。
 
 ### 微信上传脚本失败
 

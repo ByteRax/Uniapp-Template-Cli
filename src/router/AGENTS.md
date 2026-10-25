@@ -32,9 +32,9 @@
 
 ### Common Patterns
 - `setupRoute()` 注册全局拦截器。
-- `currRoute()` / `parseUrlToObj()` 用于从 `fullPath` 解析 path 与 query。
+- `currRoute()` / `parseUrl()` 用于从 `fullPath` 解析 path 与 query。
 - `getAllPages(key?)` 同时遍历主包与分包页面元数据。
-- 导航封装里有 300ms 同路由去重与全局锁。
+- 导航封装里有 300ms 同路由去重与全局锁；守卫预检在加锁前执行，调用方回调不能覆盖解锁逻辑。
 
 ## Dependencies
 

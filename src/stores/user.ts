@@ -1,6 +1,6 @@
 import type { IUserInfoRes } from '@/api/types/login.ts'
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { getUserInfo } from '@/api/login.ts'
 
 const initState: IUserInfoRes = {

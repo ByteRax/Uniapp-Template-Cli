@@ -1,7 +1,7 @@
 /**
  * 路由拦截，通常也是登录拦截
  */
-import { HOME_PAGE, LOGIN_PAGE } from '@/router/router.ts'
+import router, { HOME_PAGE, LOGIN_PAGE } from '@/router/router.ts'
 import { getAllPages, getCurrentPage, parseUrl } from '@/router/utils'
 import { userStore } from '@/stores/userStore.ts'
 
@@ -54,7 +54,7 @@ export const navigateToInterceptor = {
       } else {
         console.log('已经登录，但是还在登录页', myQuery['redirect'])
         const url = myQuery['redirect'] || HOME_PAGE
-        uni.navigateTo({ url }).then()
+        router.push({ url }, true, true)
         return false // 明确表示阻止原路由继续执行
       }
     }

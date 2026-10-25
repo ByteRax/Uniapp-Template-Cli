@@ -12,6 +12,8 @@ export interface RequestMeta {
   authRetried?: boolean
   // 请求唯一标识
   requestKey?: string
+  toast?: boolean
+  originalData?: boolean
   [key: string]: any
 }
 
@@ -72,6 +74,7 @@ export class RequestOptions implements IRequestOptions {
   meta?: RequestMeta
   task?: UniApp.RequestTask | UniApp.UploadTask
   cancelFlag?: boolean // 取消请求的标记，如果task已经取消，则此标志位为true 否则false
+  onCancel?: () => void
 
   constructor(options: RequestOptionsInit) {
     Object.assign(this, options)
@@ -85,7 +88,11 @@ export class RequestOptions implements IRequestOptions {
       return
     }
     this.cancelFlag = true
-    this.task?.abort()
+    try {
+      this.task?.abort()
+    } finally {
+      this.onCancel?.()
+    }
   }
 }
 
@@ -95,6 +102,7 @@ export class RequestOptions implements IRequestOptions {
 export interface RequestInterceptor {
   request?: (options: RequestOptions) => RequestOptions | Promise<RequestOptions>
   response?: <T = any>(options: RequestOptions, response: ResponseResult) => Promise<ResponseData<T>>
+  complete?: (options: RequestOptions) => void
 }
 
 export interface ResponseResult extends UniApp.RequestSuccessCallbackResult {

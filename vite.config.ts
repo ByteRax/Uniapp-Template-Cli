@@ -1,5 +1,3 @@
-// eslint-disable-next-line ts/ban-ts-comment -- 某些第三方库（如 @uni-helper/vite-plugin-uni-manifest 和 dayjs）使用 export = 语法，虽然 tsconfig 中已启用 esModuleInterop，但 IDE 仍报类型错误。运行时能够正确处理这些导入，因此使用 ts-nocheck 忽略类型检查
-// @ts-nocheck
 import type { ConfigEnv } from 'vite'
 import * as path from 'node:path'
 import * as process from 'node:process'
@@ -24,17 +22,19 @@ import AutoImport from 'unplugin-auto-import/vite'
 import { defineConfig, loadEnv } from 'vite'
 import viteImagemin from 'vite-plugin-imagemin'
 import ViteRestart from 'vite-plugin-restart'
-import { handlePageName } from './vite-plugins/vite-config-uni-pages'
+import { handlePageName, handleSubPackagePageName } from './vite-plugins/vite-config-uni-pages'
 import openDevTools from './vite-plugins/vite-open-dev-tools'
 import { AutoVersion } from './vite-plugins/vite-plugin-auto-version'
+import { isBuildCommand } from './getEnv'
+import manifestConfig from './manifest.config'
 import { WotResolver } from './wot-ui-resolver'
 
 // https://vitejs.dev/config/
 export default async ({ mode }: ConfigEnv) => {
   const { UNI_PLATFORM, SKIP_OPEN_DEVTOOLS } = process.env
   const env = loadEnv(mode, path.resolve(process.cwd(), 'env'))
-  const { VITE_APP_PORT, VITE_SERVER_BASEURL, VITE_APP_TITLE, VITE_APP_PUBLIC_BASE, VITE_APP_PROXY_ENABLE, VITE_APP_PROXY_PREFIX, VITE_USER_NODE_ENV } = env
-  const isBuild = VITE_USER_NODE_ENV === 'production' || mode === 'production'
+  const { VITE_APP_PORT, VITE_SERVER_BASEURL, VITE_APP_TITLE, VITE_APP_PUBLIC_BASE, VITE_APP_PROXY_ENABLE, VITE_APP_PROXY_PREFIX } = env
+  const isBuild = isBuildCommand()
   const isMpWeixin = UNI_PLATFORM === 'mp-weixin'
   console.warn('UNI_PLATFORM -> ', UNI_PLATFORM) // 得到 mp-weixin, h5, app 等
 
@@ -54,9 +54,9 @@ export default async ({ mode }: ConfigEnv) => {
       UniPages({
         dts: 'src/types/uni-pages.d.ts',
         subPackages: ['src/pages-sub'],
-        onAfterMergePageMetaData: (ctx) => {
-          handlePageName(ctx, 'pageMetaData')
-          handlePageName(ctx, 'subPageMetaData')
+        onAfterMergePageMetaData: (pageMetaData, subPageMetaData) => {
+          handlePageName(pageMetaData)
+          handleSubPackagePageName(subPageMetaData)
         },
         exclude: ['**/components/**/*.*', '**/layout/**/*.*']
       }),
@@ -78,12 +78,14 @@ export default async ({ mode }: ConfigEnv) => {
           if (source.endsWith('/compressor.min.js') || source === './compressor.min.js') {
             return '\0mp-weixin-empty-compressor'
           }
+          return null
         },
         load(id) {
           if (id === '\0mp-weixin-empty-compressor') {
             // H5 专用 Compressor.js 不参与微信小程序 dev/build 打包。
             return 'export {}'
           }
+          return null
         }
       },
       Uni({
@@ -134,23 +136,6 @@ export default async ({ mode }: ConfigEnv) => {
           'async-import': true, // 启用异步导入
           'async-component': true // 启用异步组件
         },
-        // TypeScript 类型支持
-        dts: {
-          'enable': true,
-          'base': 'src/types',
-          'async-import': {
-            enable: true,
-            base: 'src/types',
-            name: 'async-import.d.ts',
-            path: './src/types/async-import.d.ts'
-          },
-          'async-component': {
-            enable: true,
-            base: 'src/types',
-            name: 'async-component.d.ts',
-            path: './src/types/async-component.d.ts'
-          }
-        },
         logger: false
       }),
       // 图片压缩插件
@@ -195,8 +180,12 @@ export default async ({ mode }: ConfigEnv) => {
       // h5环境增加 BUILD_TIME 和 BUILD_BRANCH
       UNI_PLATFORM === 'h5' && {
         name: 'html-transform',
-        transformIndexHtml(html) {
-          return html.replace('%BUILD_TIME%', dayjs().format('YYYY-MM-DD HH:mm:ss')).replace('%VITE_APP_TITLE%', `${VITE_APP_TITLE}`)
+        transformIndexHtml: {
+          order: 'post',
+          handler(html) {
+            const title = manifestConfig.h5?.title || manifestConfig.name || VITE_APP_TITLE
+            return html.replace('%BUILD_TIME%', dayjs().format('YYYY-MM-DD HH:mm:ss')).replace(/<title>[\s\S]*?<\/title>/, () => `<title>${title}</title>`)
+          }
         }
       },
       // 打包分析插件，h5 + 生产环境才弹出
@@ -284,29 +273,6 @@ export default async ({ mode }: ConfigEnv) => {
               chunkFileNames: 'static/js/[name]-[hash].js',
               entryFileNames: 'static/js/[name]-[hash].js',
               assetFileNames: 'static/[ext]/[name]-[hash][extname]',
-              manualChunks(id) {
-                // 分包策略优化
-                if (id.includes('vue') || id.includes('@vue')) {
-                  return 'vue-vendor'
-                }
-                if (id.includes('pinia')) {
-                  return 'pinia-vendor'
-                }
-                if (id.includes('@wot-ui/ui')) {
-                  return 'wot-ui'
-                }
-                if (id.includes('z-paging')) {
-                  return 'z-paging'
-                }
-                if (id.includes('node_modules')) {
-                  // 将其他第三方库打包为一个单独的 chunk
-                  const match = id.match(/node_modules\/([^/]+)/)
-                  if (match) {
-                    return `vendor-${match[1]}`
-                  }
-                }
-                return undefined
-              },
               // 优化 Rollup 输出
               compact: true
             }
@@ -314,12 +280,6 @@ export default async ({ mode }: ConfigEnv) => {
         // 优化 Rollup 构建
         treeshake: {
           moduleSideEffects: true
-        }
-      },
-      server: {
-        // H5 启用 HTTP/2 推送
-        headers: {
-          Link: '</assets/main.js>; rel=preload; as=script'
         }
       }
     }
